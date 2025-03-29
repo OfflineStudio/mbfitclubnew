@@ -45,7 +45,7 @@ const SSSDetailScreen = observer(() => {
   if (!SSSStore.selectShortText || !SSSStore.selectLongText) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#7fcac6" />
+        <ActivityIndicator size="large" color="#ffcc00" />
         <Text style={styles.loadingText}>Veriler yükleniyor...</Text>
       </View>
     );
@@ -63,7 +63,7 @@ const SSSDetailScreen = observer(() => {
       >
         <View style={styles.contentContainer}>
           <View style={styles.titleContainer}>
-            <Icon name="question-circle" size={24} color="#7fcac6" style={styles.titleIcon} />
+            <Icon name="question-circle" size={24} color="#ffcc00" style={styles.titleIcon} />
             <Text style={styles.title}>{SSSStore.selectShortText}</Text>
           </View>
           <View style={styles.separator} />

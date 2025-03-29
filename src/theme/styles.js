@@ -232,7 +232,7 @@ minHeight: 50,
   }, 
    topBannerContainer: {
     flexDirection: "row",
-    backgroundColor: "#7fcac6",
+    backgroundColor: "#ffcc00",
     color: "#ffffff",
     padding: 8,
     borderRadius: 4,

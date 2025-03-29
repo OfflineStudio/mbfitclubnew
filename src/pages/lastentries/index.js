@@ -1,174 +1,211 @@
 /* eslint-disable */
 import React, { useEffect } from 'react';
 import {
-  Button,
-  Text,
   View,
-  ActivityIndicator,
-  TextInput,
+  Text,
   SafeAreaView,
-  ScrollView,
-  Alert,
   StyleSheet,
-  FlatList
+  FlatList,
+  ActivityIndicator,
+  Platform,
+  StatusBar,
+  RefreshControl,
+  Dimensions
 } from 'react-native';
 import { observer } from 'mobx-react';
-import colors from '../../components/colors';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { TextInputMask } from 'react-native-masked-text'
+import colors from '../../components/colors';
+import AuthStore from '../../stores/AuthStore';
 import LastEntryStore from '../../stores/LastEntryStore';
-import translations from '../../configs/translations'
+import translations from '../../configs/translations';
 
-const Menu = ({navigation, createDate,branchText,typeText}) => (
-   
-  
-  <View style={styles.menuItem}>
-     
-    <View style={styles.menuTitleContainer}>
-      <Text style={styles.menuTitle}>Şube: {branchText}</Text>
-      <Text style={styles.menuTitle}>Geçiş: {typeText}</Text>
+const { width } = Dimensions.get('window');
+
+const EntryCard = ({ createDate, branchText, typeText }) => (
+  <View style={styles.entryCard}>
+    <View style={styles.iconContainer}>
+      <Icon name="sign-in" size={24} color="#FFF" />
     </View>
-    <View style={styles.menuTitleContainer}>
-     
-      <Text style={styles.menuTitle}>Tarih: {createDate}</Text>
-    
+    <View style={styles.entryInfo}>
+      <Text style={styles.dateText}>{createDate}</Text>
+      <Text style={styles.branchText}>{branchText}</Text>
+      <Text style={styles.timeText}>{typeText}</Text>
+    </View>
+    <View style={styles.statusContainer}>
+      <Icon name="check-circle" size={20} color="#4CAF50" />
     </View>
   </View>
-
 );
-const renderMenuItem = navigation => ({item}) => (
-<Menu navigation={navigation} {...item} />
+
+const EmptyState = () => (
+  <View style={styles.emptyContainer}>
+    <Icon name="history" size={50} color={colors.primary || '#ffcc00'} />
+    <Text style={styles.emptyText}>{translations.noentryrecords}</Text>
+  </View>
 );
 
 const LastEntriesScreen = observer(() => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    LastEntryStore.getEntry();
-  }, []);
-
-  if (!LastEntryStore.loading) {
-    if (!LastEntryStore.dataEntry) {
-      return (
-        <View style={styles.bannerContainerWrapper}>
-          <View style={styles.bannerContainer}>
-            <Icon style={styles.bannerIcon} name={"info-circle"} size={22} />
-            <Text style={styles.bannerText}>
-              {translations.entryempty}
-            </Text>
-          </View>
-        </View>
-      );
-    } else {
-      return (
-        <SafeAreaView style={styles.container}>
-          <ScrollView>
-            <View style={styles.categoryList}>
-              <Text style={styles.categoryTitle}></Text>
-              <FlatList
-                style={styles.menuList}
-                data={LastEntryStore.dataEntry}
-                renderItem={renderMenuItem(navigation)}
-                keyExtractor={item => item.id}
-              />
-            </View>
-          </ScrollView>
-        </SafeAreaView>
-      );
+    if (!AuthStore.isSuccess) {
+      AuthStore.userLogout();
+      navigation.navigate("LoginPage");
+      return;
     }
-  } else {
+    LastEntryStore.getEntry();
+  }, [navigation]);
+
+  const handleRefresh = () => {
+    LastEntryStore.getEntry();
+  };
+
+  if (LastEntryStore.loading) {
     return (
-      <View style={styles.indicatorView}>
-        <View>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.primary || '#ffcc00'} />
       </View>
     );
   }
-});
 
-export default LastEntriesScreen;
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar
+        barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'}
+        backgroundColor={colors.background || '#F5F5F5'}
+      />
+      
+    
+
+      <FlatList
+        data={LastEntryStore.dataEntry}
+        renderItem={({ item }) => (
+          <EntryCard
+            createDate={item.createDate}
+            branchText={item.branchText}
+            typeText={item.typeText}
+          />
+        )}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={styles.listContainer}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={<EmptyState />}
+        refreshControl={
+          <RefreshControl
+            refreshing={LastEntryStore.loading}
+            onRefresh={handleRefresh}
+            colors={[colors.primary || '#ffcc00']}
+            tintColor={colors.primary || '#ffcc00'}
+          />
+        }
+      />
+    </SafeAreaView>
+  );
+});
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.background || '#F5F5F5'
   },
-  categoryTitle: {
-    fontWeight: 'bold',
-    paddingTop: 8,
-    color: colors.txtDescription,
-  },
-  categoryList: {
-    paddingHorizontal: 16,
-  },
-  categoryItem: {},
-  menuList: {},
-  menuItem: {
-    flexDirection: 'row',
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-    marginVertical: 8,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: '#c4c4c4',
-    backgroundColor: '#fbfbfb',
-  },
-  mennuIconContainer: {
-    borderRadius: 4,
-    width:200,
-    // height: 60,
-   // backgroundColor: '#92bcf0',
-    marginRight: 2,
-  },
-  menuIcon: {
-    color: colors.txtWhite,
-    paddingVertical: 9,
-    paddingLeft: 11,
-    backgroundColor:"#ffcc00"
-  },
-  menuArrow: {
-    color: colors.txtDark,
-    textAlign: 'right',
-    paddingHorizontal: 8,
-    paddingVertical: 12,
-  },
-  menuTitleContainer: {
+  loadingContainer: {
     flex: 1,
-  },
-  menuTitle: {
-    color: colors.txtDark,
-    fontWeight: 'bold',
-    paddingLeft: 10,
-  },
-  menuImage: {
-    // width: 250,
-    // height: 60,
-    padding: 0,
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 4,
-  },
-  bannerContainerWrapper: {
-    flex: 1,
-    alignContent: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: colors.background || '#F5F5F5'
+  },
+  header: {
+    padding: 16,
+    backgroundColor: '#FFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: colors.txtDark || '#333',
+    marginBottom: 4,
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: colors.txtDescription || '#666',
+  },
+  listContainer: {
+    padding: 16,
+    paddingTop: 8,
+  },
+  entryCard: {
     flexDirection: 'row',
-    justifyContent: 'center'
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    marginBottom: 12,
+    padding: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
-  bannerContainer: {
-    flexDirection: "row",
-    backgroundColor: "gray",
-    color: "#ffffff",
-    padding: 8,
-    borderRadius: 4,
-    marginBottom: 10
+  iconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.primary || '#ffcc00',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
   },
-  bannerIcon: {
-    color: "#ffffff",
-    paddingRight: 2
+  entryInfo: {
+    flex: 1,
   },
-  bannerText: {
-    color: "#ffffff",
-    padding: 2
+  dateText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.txtDark || '#333',
+    marginBottom: 4,
+  },
+  timeText: {
+    fontSize: 14,
+    color: colors.txtDescription || '#666',
+    marginBottom: 2,
+  },
+  branchText: {
+    fontSize: 14,
+    color: colors.primary || '#ffcc00',
+  },
+  statusContainer: {
+    marginLeft: 8,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 32,
+  },
+  emptyText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: colors.txtDescription || '#666',
+    textAlign: 'center',
+    paddingHorizontal: 32,
   },
 });
+
+export default LastEntriesScreen;

@@ -49,9 +49,7 @@ const NewsScreen = observer(() => {
   if (!NewsStore.loading) {
     return (
       <ScrollView style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>{translations.news}</Text>
-        </View>
+      
         <View style={styles.content}>
           <View style={styles.categoryList}>
             <FlatList

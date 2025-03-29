@@ -54,7 +54,7 @@ const MembershipCard = ({ item, onSuspendPress }) => {
     <View style={styles.card}>
       <View style={styles.cardHeader}>
         <View style={styles.packageContainer}>
-          <Icon name="bookmark" size={20} color="#7fcac6" style={styles.packageIcon} />
+          <Icon name="bookmark" size={20} color="#ffcc00" style={styles.packageIcon} />
           <Text style={styles.packageName}>{item.productName || translations.product}</Text>
         </View>
         <View style={[styles.statusBadge, { backgroundColor: getStatusColor(item.membershipStatuText) }]}>
@@ -82,7 +82,7 @@ const MembershipCard = ({ item, onSuspendPress }) => {
         </View>
 
         <View style={styles.daysLeftContainer}>
-          <Icon name="hourglass-half" size={16} color="#7fcac6" />
+          <Icon name="hourglass-half" size={16} color="#ffcc00" />
           <Text style={styles.daysLeftText}>
             {translations.leftDay}: <Text style={styles.daysLeftNumber}>{item.leftDay}</Text>
           </Text>
@@ -169,17 +169,14 @@ const MembershipScreen = observer(() => {
   if (MembershipStore.loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#7fcac6" />
+        <ActivityIndicator size="large" color="#ffcc00" />
       </View>
     );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Icon name="credit-card" size={22} color="#fff" style={styles.headerIcon} />
-        <Text style={styles.headerText}>{translations.memberships}</Text>
-      </View>
+     
 
       <FlatList
         data={MembershipStore.memberships}
@@ -196,8 +193,8 @@ const MembershipScreen = observer(() => {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={handleRefresh}
-            colors={['#7fcac6']}
-            tintColor="#7fcac6"
+            colors={['#ffcc00']}
+            tintColor="#ffcc00"
           />
         }
         ListEmptyComponent={
@@ -218,7 +215,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    backgroundColor: '#7fcac6',
+    backgroundColor: '#ffcc00',
     padding: 16,
     alignItems: 'center'
   },
@@ -334,7 +331,7 @@ const styles = StyleSheet.create({
   },
   daysLeftNumber: {
     fontWeight: '600',
-    color: '#7fcac6'
+    color: '#ffcc00'
   },
   suspendButton: {
     flexDirection: 'row',

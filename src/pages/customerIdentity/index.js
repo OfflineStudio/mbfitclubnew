@@ -129,7 +129,7 @@ const CustomerIdentityScreen = observer(() => {
                 style={styles.datePickerButton}
                 onPress={() => CustomerIdentityStore.setBirthDateModal(true)}
               >
-                <Icon name="calendar" size={20} color="#7fcac6" style={styles.dateIcon} />
+                <Icon name="calendar" size={20} color="#ffcc00" style={styles.dateIcon} />
                 <Text style={styles.dateText}>
                   {CustomerIdentityStore.BirthDate 
                     ? new Date(CustomerIdentityStore.BirthDate).toLocaleDateString('tr-TR')
@@ -162,7 +162,7 @@ const CustomerIdentityScreen = observer(() => {
   } else {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#7fcac6" />
+        <ActivityIndicator size="large" color="#ffcc00" />
       </View>
     );
   }
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    backgroundColor: '#7fcac6',
+    backgroundColor: '#ffcc00',
     borderRadius: 8,
     padding: 16,
     marginBottom: 24,
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   },
   imagePickerButton: {
     flexDirection: 'row',
-    backgroundColor: '#7fcac6',
+    backgroundColor: '#ffcc00',
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 25,
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#7fcac6',
+    borderColor: '#ffcc00',
     borderRadius: 8,
     padding: 12
   },

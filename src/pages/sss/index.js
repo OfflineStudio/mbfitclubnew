@@ -79,7 +79,7 @@ const FAQItem = ({ longText, shortText, id }) => {
           activeOpacity={0.6}
         >
       
-          <Icon name="arrow-right" size={16} color="#7fcac6" style={styles.detailButtonIcon} />
+          <Icon name="arrow-right" size={16} color="#ffcc00" style={styles.detailButtonIcon} />
         </TouchableOpacity>
       </View>
       
@@ -162,7 +162,7 @@ const SSSScreen = observer(() => {
 
   return (
     <View style={styles.loadingContainer}>
-      <ActivityIndicator size="large" color="#7fcac6" />
+      <ActivityIndicator size="large" color="#ffcc00" />
     </View>
   );
 });
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    backgroundColor: '#7fcac6',
+    backgroundColor: '#ffcc00',
     padding: 16,
     alignItems: 'center'
   },
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#7fcac6',
+    backgroundColor: '#ffcc00',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12
@@ -286,12 +286,12 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#7fcac6'
+    borderColor: '#ffcc00'
   },
   detailButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#7fcac6',
+    color: '#ffcc00',
     marginRight: 4
   },
   detailButtonIcon: {

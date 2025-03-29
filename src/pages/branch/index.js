@@ -103,7 +103,7 @@ const BranchScreen = observer(() => {
   
   return (
     <View style={styles.loadingContainer}>
-      <ActivityIndicator size="large" color="#7fcac6" />
+      <ActivityIndicator size="large" color="#ffcc00" />
     </View>
   );
 });
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    backgroundColor: '#7fcac6',
+    backgroundColor: '#ffcc00',
     padding: 16,
     alignItems: 'center'
   },
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#7fcac6',
+    backgroundColor: '#ffcc00',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     color: '#666'
   },
   branchArrow: {
-    color: '#7fcac6'
+    color: '#ffcc00'
   },
   emptyContainer: {
     flex: 1,

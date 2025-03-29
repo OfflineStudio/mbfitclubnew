@@ -1,232 +1,249 @@
 /* eslint-disable */
-import React, { Component } from 'react';
-import { Button, View, TextInput, Alert, ActivityIndicator, StyleSheet, Image, TouchableOpacity, Text, Platform } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  TouchableOpacity,
+  SafeAreaView,
+  Image,
+  ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
+  ActivityIndicator,
+  Dimensions,
+  Text,
+  ScrollView
+} from 'react-native';
 import { observer } from 'mobx-react';
-import Wallpaper from './wallpaper';
+import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import LoginStore from '../../stores/LoginStore';
-import MenuStore from '../../stores/MenuStore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import translations from '../../configs/translations'
-import DeviceInfo from 'react-native-device-info';
+import translations from '../../configs/translations';
+import colors from '../../components/colors';
 
-class LoginScreen extends Component {
- 
-  constructor(props) {
-     
-    super(props);
-    
-  
-    this._loginControlAsync();
-  
-  }
+const { width, height } = Dimensions.get('window');
 
-  componentDidMount() {
+const LoginScreen = observer(() => {
+  const navigation = useNavigation();
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
     LoginStore.setAuth();
-    
-    // MenuStore.setAuth();
-   
-  }
+  }, []);
 
-  _loginControlAsync = async () => {
-    const userResult = await AsyncStorage.getItem('CoreMobile');
-    const user = JSON.parse(userResult);
- 
-    if (user != null && user.id != null) {     
-      LoginStore.currentUser = user;
-      this.props.navigation.navigate("MainTabs");
+  const handleLogin = () => {
+    if (LoginStore.isValid) {
+      LoginStore.login(
+        () => navigation.navigate('MainTabs'),
+        (error) => alert(error)
+      );
     }
   };
- 
-  handleLoginClick = () => {
-    LoginStore.login(() => {
-      MenuStore.setAuth(); 
-      this.props.navigation.navigate("MainTabs");
-    }, (text) => {
-      Alert.alert(
-        translations.warning,
-        text,
-        [
-          { text: 'OK' },
-        ],
-        { cancelable: false },
-      );
-    })
-  }
- 
-  render() {
-    const { navigate } = this.props.navigation;
-    try {
-      LoginStore.setDeviceId(DeviceInfo.getUniqueIdSync());
-    } catch (error) {
-      console.log('Set Device Error',error);
-    } 
 
-    if (!LoginStore.loading) {
-      return (
-        <Wallpaper style={styles.container}>
-          <View style={styles.loginView}>
-            <View style={styles.logoView}>
-              <Image
-                style={styles.logo}
-                source={require('../../assets/images/logo.png')}
-                title={'logo'}
-              />
+  const toggleSecureEntry = () => {
+    setSecureTextEntry(!secureTextEntry);
+  };
+
+  return (
+    <ImageBackground
+      source={LoginStore.loginScreen ? { uri: LoginStore.loginScreen } : require('../../assets/images/gym.jpg')}
+      style={styles.backgroundImage}
+      resizeMode="cover"
+    >
+      <SafeAreaView style={styles.container}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardAvoidingView}
+        >
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.formContainer}>
+              <View style={styles.logoContainer}>
+                <Image
+                  source={require('../../assets/images/logo.png')}
+                  style={styles.logo}
+                 
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Icon name="user" size={20} color="#666" style={styles.inputIcon} />
+                <TextInput
+                  style={styles.input}
+                  placeholder={translations.username}
+                  placeholderTextColor="#999"
+                  autoCapitalize="none"
+                  value={LoginStore.username}
+                  onChangeText={(text) => LoginStore.setUsername(text)}
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Icon name="lock" size={20} color="#666" style={styles.inputIcon} />
+                <TextInput
+                  style={styles.input}
+                  placeholder={translations.password}
+                  placeholderTextColor="#999"
+                  secureTextEntry={secureTextEntry}
+                  value={LoginStore.password}
+                  onChangeText={(text) => LoginStore.setPassword(text)}
+                />
+                <TouchableOpacity onPress={toggleSecureEntry} style={styles.eyeIcon}>
+                  <Icon
+                    name={secureTextEntry ? 'eye' : 'eye-slash'}
+                    size={20}
+                    color="#666"
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                style={[styles.loginButton, !LoginStore.isValid && styles.loginButtonDisabled]}
+                onPress={handleLogin}
+                disabled={!LoginStore.isValid || LoginStore.loading}
+              >
+                {LoginStore.loading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.loginButtonText}>{translations.login}</Text>
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.forgotPasswordButton}
+                onPress={() => navigation.navigate('ForgotPassword')}
+              >
+                <Text style={styles.forgotPasswordText}>
+                  {translations.forgotpassword}
+                </Text>
+              </TouchableOpacity>
             </View>
-            <View style={styles.inputView}>
-              <TextInput
-               placeholderTextColor={'gray'}
-                style={styles.textInput}
-                placeholder={translations.emailoraccount}
-                onChangeText={text => { LoginStore.setUsername(text) }}
-                returnKeyType={"next"}
-                onSubmitEditing={() => this.passwordInput.focus()}
-                value={ LoginStore.username }
-                
-              />
-            </View>
-            <View style={styles.inputView}>
-              <TextInput
-               placeholderTextColor={'gray'}
-                style={styles.textInput}
-                placeholder={translations.password}
-                secureTextEntry
-                onChangeText={text => { LoginStore.setPassword(text) }}
-                returnKeyType={"go"}
-                value={ LoginStore.password }
-                ref={input => this.passwordInput = input}
-              />
-            </View>
-            <View style={styles.inputView}>
-              <Button
-                title={translations.login}
-                disabled={!LoginStore.isValid}
-                onPress={this.handleLoginClick}
-              />
-            </View>
-            <View style={styles.rememberPassBtnView}>
-              <Button
-                color={"gray"}
-                title={translations.forgotpassword}
-                onPress={() => navigate('ForgotPassword')}
-              />
-            </View>
-          </View>
-        </Wallpaper>
-      );
-    }
-    else {
-      return (
-        <Wallpaper style={styles.container}>
-          <View style={styles.indicatorView}>
-            <View>
-              <ActivityIndicator size="large" color="#0000ff" />
-            </View>
-          </View>
-        </Wallpaper>
-      );
-    }
-  }
-}
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </ImageBackground>
+  );
+});
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%'
+  },
   container: {
     flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)'
   },
-  indicatorView: {
-    flex: 1,
-    alignContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "center"
+  keyboardAvoidingView: {
+    flex: 1
   },
-  loginView: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    width: '90%',
-    padding: 24,
-    marginHorizontal: '5%',
-    marginTop: '30%',
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+    paddingBottom: 24,
+    justifyContent: 'center'
   },
-  logoView: {
-    alignItems: "center",
-    backgroundColor: 'white',
-    marginBottom: 20
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 32,
+    marginTop: -60
   },
   logo: {
-    width: 280,
-    height: 120,
-    resizeMode: 'contain'
+    width: width * 0.5,
+    height: 80
+   
   },
-  inputView: {
-    marginVertical: 8
-  },
-  textInput: {
-    paddingHorizontal: 16,
-    paddingVertical: Platform.OS === 'ios' ? 12 : 8,
-    borderWidth: 1,
-    borderRadius: 8,
-    borderColor: "#E0E0E0",
-    color: "#333333",
-    backgroundColor: '#F8F9FA',
-    fontSize: 16,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
-  },
-  rememberPassBtnView: {
-    marginTop: 16,
-    alignItems: 'center'
-  },
-  customButton: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
+  formContainer: {
     width: '100%',
-    marginVertical: 8,
+    backgroundColor: 'black',
+    borderRadius: 16,
+    padding: 24,
+    paddingTop: 80,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    marginBottom: 16,
+    paddingHorizontal: 16,
+    height: 56,
+    borderWidth: 1,
+    borderColor: '#e0e0e0'
+  },
+  inputIcon: {
+    marginRight: 12
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: '#333',
+    paddingVertical: 12
+  },
+  eyeIcon: {
+    padding: 8
+  },
+  loginButton: {
+    backgroundColor: '#f3eb1a',
+    borderRadius: 12,
+    height: 56,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 24,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#f3eb1a',
+        shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.2,
-        shadowRadius: 4,
+        shadowRadius: 8,
       },
       android: {
         elevation: 4,
       },
     }),
   },
-  customButtonDisabled: {
-    backgroundColor: '#B0B0B0',
+  loginButtonDisabled: {
+    backgroundColor: '#f3eb1a',
+    ...Platform.select({
+      ios: {
+        shadowOpacity: 0,
+      },
+      android: {
+        elevation: 0,
+      },
+    }),
   },
-  customButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center'
+  loginButtonText: {
+    color: 'black',
+    fontSize: 18,
+    fontWeight: '600'
+  },
+  forgotPasswordButton: {
+    alignItems: 'center',
+    marginTop: 16,
+    padding: 8
   },
   forgotPasswordText: {
-    color: '#007AFF',
-    fontSize: 14,
-    fontWeight: '500',
-    textDecorationLine: 'underline'
+    color: '#f3eb1a',
+    fontSize: 16
   }
 });
 
-export default observer(LoginScreen);
+export default LoginScreen;

@@ -30,7 +30,7 @@ const LogoutScreen = observer(() => {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ActivityIndicator size="large" color="#7fcac6" />
+      <ActivityIndicator size="large" color="#ffcc00" />
     </View>
   );
 });

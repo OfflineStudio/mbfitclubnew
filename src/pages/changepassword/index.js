@@ -73,7 +73,7 @@ const ChangePasswordScreen = observer(() => {
           onSubmitEditing={onSubmitEditing}
           autoCapitalize="none"
         />
-        <Icon name="lock" size={20} color="#7fcac6" style={styles.inputIcon} />
+        <Icon name="lock" size={20} color="#ffcc00" style={styles.inputIcon} />
       </View>
     </View>
   );
@@ -145,7 +145,7 @@ const ChangePasswordScreen = observer(() => {
   
   return (
     <View style={styles.loadingContainer}>
-      <ActivityIndicator size="large" color="#7fcac6" />
+      <ActivityIndicator size="large" color="#ffcc00" />
     </View>
   );
 });
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    backgroundColor: '#7fcac6',
+    backgroundColor: 'black',
     borderRadius: 8,
     padding: 16,
     marginBottom: 24,
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     marginRight: 16
   },
   submitButton: {
-    backgroundColor: '#7fcac6',
+    backgroundColor: '#ffcc00',
     borderRadius: 8,
     paddingVertical: 14,
     alignItems: 'center',

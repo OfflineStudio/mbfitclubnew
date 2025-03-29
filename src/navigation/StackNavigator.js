@@ -18,6 +18,7 @@ import BranchScreen from '../pages/branch';
 import BranchDetailScreen from '../pages/branch/detail';
 import CareerScreen from '../pages/career';
 import NotificationScreen from '../pages/notification';
+import ActivityDetailScreen from '../pages/activities/detail';
 import translations from '../configs/translations';
 
 const Stack = createStackNavigator();
@@ -144,6 +145,14 @@ function StackNavigator() {
         options={{
           headerShown: true,
           title: translations.notifications || 'Bildirimler'
+        }}
+      />
+      <Stack.Screen 
+        name="ActivityDetailScreen" 
+        component={ActivityDetailScreen}
+        options={{
+          headerShown: true,
+          title: translations.activities || 'Aktiviteler'
         }}
       />
     </Stack.Navigator>

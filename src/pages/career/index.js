@@ -36,7 +36,7 @@ const CareerScreen = observer(() => {
   if (!LoginStore.careerUrl) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#7fcac6" />
+        <ActivityIndicator size="large" color="#ffcc00" />
       </View>
     );
   }
@@ -57,7 +57,7 @@ const CareerScreen = observer(() => {
       }}
       renderLoading={() => (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#7fcac6" />
+          <ActivityIndicator size="large" color="#ffcc00" />
         </View>
       )}
     />

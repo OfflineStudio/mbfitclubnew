@@ -35,18 +35,18 @@ const ExerciseItem = ({ exerciseText, set, duration, repetition, imagePath, vide
         
         <View style={styles.statsContainer}>
           <View style={styles.statItem}>
-            <Icon name="refresh" size={16} color={colors.primary || '#007AFF'} />
+            <Icon name="refresh" size={16} color={colors.primary || 'black'} />
             <Text style={styles.statText}>{set} Set</Text>
           </View>
           
           <View style={styles.statItem}>
-            <Icon name="repeat" size={16} color={colors.primary || '#007AFF'} />
+            <Icon name="repeat" size={16} color={colors.primary || 'black'} />
             <Text style={styles.statText}>{repetition} Tekrar</Text>
           </View>
           
           {duration && (
             <View style={styles.statItem}>
-              <Icon name="clock-o" size={16} color={colors.primary || '#007AFF'} />
+              <Icon name="clock-o" size={16} color={colors.primary || 'black'} />
               <Text style={styles.statText}>{duration}</Text>
             </View>
           )}
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: colors.primary || '#007AFF',
+    backgroundColor: colors.primary || '#ffcc00',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16

@@ -31,7 +31,7 @@ const CustomHeader = () => {
           style={styles.notificationButton}
           onPress={() => navigation.navigate('NotificationScreen')}
         >
-          <Icon name="bell" size={24} color="#7fcac6" />
+          <Icon name="bell" size={24} color="white" />
         </TouchableOpacity>
       </View>
     </View>
@@ -43,8 +43,11 @@ function TabNavigator() {
     <Tab.Navigator
       initialRouteName="News"
       screenOptions={{
-        tabBarActiveTintColor: '#0066cc',
-        tabBarInactiveTintColor: 'gray',
+        tabBarActiveTintColor: '#ffcc00',
+        tabBarInactiveTintColor: 'white',
+        tabBarStyle: {
+          backgroundColor: 'black',
+        },
         header: () => <CustomHeader />
       }}
     >
@@ -127,7 +130,7 @@ function TabNavigator() {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: 'black',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
