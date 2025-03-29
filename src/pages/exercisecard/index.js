@@ -54,8 +54,9 @@ const ExerciseCardScreen = observer(() => {
     }, [navigation]);
 
     const handleDayPress = (day) => {
-        ExerciseCardStore.getExerciseForDay("Ant" + day);
-        navigation.navigate("ExerciseCardDetailScreen");
+      console.log(day);
+        ExerciseCardStore.getExerciseForDay('Ant' + day);
+        navigation.navigate("ExerciseCardDetail");
     };
 
     const renderItem = ({ item }) => (

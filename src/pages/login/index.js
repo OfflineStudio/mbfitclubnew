@@ -28,22 +28,19 @@ class LoginScreen extends Component {
   }
 
   _loginControlAsync = async () => {
-
-    // const userResult = await AsyncStorage.getItem('CoreMobile');
-    // const user = JSON.parse(userResult);
+    const userResult = await AsyncStorage.getItem('CoreMobile');
+    const user = JSON.parse(userResult);
  
-    // if (user != null && user.id != null) {     
-    //   LoginStore.currentUser = user;
-    //   this.props.navigation.navigate("Tabs");
-      
-    // }
-    
-   
+    if (user != null && user.id != null) {     
+      LoginStore.currentUser = user;
+      this.props.navigation.navigate("MainTabs");
+    }
   };
  
   handleLoginClick = () => {
     LoginStore.login(() => {
-      MenuStore.setAuth(); this.props.navigation.navigate("Tabs");
+      MenuStore.setAuth(); 
+      this.props.navigation.navigate("MainTabs");
     }, (text) => {
       Alert.alert(
         translations.warning,

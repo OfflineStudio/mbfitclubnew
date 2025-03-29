@@ -4,10 +4,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StoreProvider } from './src/stores/StoreProvider.js';
 import LoginScreen from './src/pages/login';
-import TabNavigator from './src/navigation/TabNavigator';
+import StackNavigator from './src/navigation/StackNavigator';
 import ForgotPassword from './src/pages/forgotpassword';
 import { colors } from './src/theme/colors';
 import { enableScreens } from 'react-native-screens';
+import 'react-native-gesture-handler';
 
 enableScreens();
 
@@ -22,16 +23,7 @@ function App() {
             barStyle="dark-content"
             backgroundColor={colors.background}
           />
-          <Stack.Navigator 
-            initialRouteName="Login"
-            screenOptions={{
-              headerShown: false
-            }}
-          >
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Tabs" component={TabNavigator} />
-            <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-          </Stack.Navigator>
+          <StackNavigator />
         </SafeAreaView>
       </StoreProvider>
     </NavigationContainer>
