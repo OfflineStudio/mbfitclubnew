@@ -48,5 +48,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>QR kod taraması için kamera izni gerekiyor</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>QR kod taraması için mikrofon izni gerekiyor</string>
 </dict>
 </plist>

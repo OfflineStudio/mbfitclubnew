@@ -7,6 +7,9 @@ import LoginScreen from './src/pages/login';
 import TabNavigator from './src/navigation/TabNavigator';
 import ForgotPassword from './src/pages/forgotpassword';
 import { colors } from './src/theme/colors';
+import { enableScreens } from 'react-native-screens';
+
+enableScreens();
 
 const Stack = createNativeStackNavigator();
 

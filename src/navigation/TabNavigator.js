@@ -7,6 +7,8 @@ import ExerciseCardScreen from '../pages/exercisecard';
 import MenuScreen from '../pages/menu';
 import translations from '../configs/translations';
 import Icon from 'react-native-vector-icons/Ionicons';
+import NewsStore from '../stores/NewsStore';
+import ActivitiesStore  from '../stores/ActivitiesStore';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,6 +31,12 @@ function TabNavigator() {
             <Icon name="newspaper-outline" size={size} color={color} />
           ),
         }}
+        listeners={{
+          tabPress: () => {
+            NewsStore.getNews();
+           
+          },
+        }}
       />
       <Tab.Screen 
         name="Activities" 
@@ -38,6 +46,11 @@ function TabNavigator() {
           tabBarIcon: ({ color, size }) => (
             <Icon name="bicycle-outline" size={size} color={color} />
           ),
+        }}
+        listeners={{
+          tabPress: () => {
+          	ActivitiesStore.getTypes();
+          },
         }}
       />
       <Tab.Screen 
@@ -49,6 +62,11 @@ function TabNavigator() {
             <Icon name="qr-code-outline" size={size} color={color} />
           ),
         }}
+        listeners={{
+          tabPress: () => {
+            QrStore.setTimer(false);
+          },
+        }}
       />
       <Tab.Screen 
         name="ExerciseCard" 
@@ -59,6 +77,11 @@ function TabNavigator() {
             <Icon name="heart-pulse-outline" size={size} color={color} />
           ),
         }}
+        listeners={{
+          tabPress: () => {
+         
+          },
+        }}
       />
       <Tab.Screen 
         name="Menu" 
@@ -68,6 +91,11 @@ function TabNavigator() {
           tabBarIcon: ({ color, size }) => (
             <Icon name="menu-outline" size={size} color={color} />
           ),
+        }}
+        listeners={{
+          tabPress: () => {
+         
+          },
         }}
       />
     </Tab.Navigator>

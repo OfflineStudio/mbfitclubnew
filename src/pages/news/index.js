@@ -1,16 +1,14 @@
 /* eslint-disable */
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { Text, View, TouchableOpacity, SafeAreaView, StyleSheet, ScrollView, Image,FlatList,ActivityIndicator ,Linking} from 'react-native';
 import { observer } from 'mobx-react';
-import { withNavigation } from 'react-navigation';
- 
-  
+import { useNavigation } from '@react-navigation/native';
 import AuthStore  from '../../stores/AuthStore';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../../components/colors';
 import NewsStore from '../../stores/NewsStore';
- 
 import translations from '../../configs/translations'
+
 const Menu = ({navigation, id,title,content,image,link}) => (
   
   <TouchableOpacity onPress={() => {
@@ -30,27 +28,25 @@ const Menu = ({navigation, id,title,content,image,link}) => (
         
     </TouchableOpacity>
   );
-  const renderMenuItem = navigation => ({item}) => (
-    <Menu navigation={navigation} {...item} />
-  );
-@observer
-class NewsScreen extends Component {
-     
-  componentDidMount(){   
-    if(!AuthStore.isSuccess)
-    {
-       
+
+const NewsScreen = observer(() => {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (!AuthStore.isSuccess) {
       AuthStore.userLogout();
-      this.props.navigation.navigate("LoginPage");
+      navigation.navigate("Login");
     }
     NewsStore.getNews();
-    
-} 
-   
-      
-render() {
+  }, [navigation]);
+
+  const renderMenuItem = (navigation) => ({ item }) => {
+    return (
+      <Menu navigation={navigation} {...item} />
+    );
+  };
+
   if (!NewsStore.loading) {
-    const {navigation} = this.props;
     return (
       <ScrollView style={styles.container}>
         <View style={styles.header}>
@@ -68,21 +64,16 @@ render() {
         </View>
       </ScrollView>
     );
-  }
-  else {
+  } else {
     return (
       <View style={styles.indicatorView}>
-        <View>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
+        <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
   }
-}
-}
+});
 
-export default withNavigation(NewsScreen);
-
+export default NewsScreen;
 
 const styles = StyleSheet.create({
     avoidingView: {
