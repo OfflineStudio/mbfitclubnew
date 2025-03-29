@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import TabNavigator from './TabNavigator';
 import ExerciseCardDetail from '../pages/exercisecard/detail';
+import ExerciseVideoScreen from '../pages/exercisecard/video';
 import LoginScreen from '../pages/login';
 import ForgotPassword from '../pages/forgotpassword';
 
@@ -24,6 +25,14 @@ function StackNavigator() {
         options={{
           headerShown: true,
           title: 'Egzersiz Detayı'
+        }}
+      />
+      <Stack.Screen 
+        name="ExerciseVideoScreen" 
+        component={ExerciseVideoScreen}
+        options={{
+          headerShown: true,
+          title: 'Egzersiz Videosu'
         }}
       />
     </Stack.Navigator>
