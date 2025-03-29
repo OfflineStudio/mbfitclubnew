@@ -1,11 +1,76 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import NewsScreen from '../pages/news';
+import ActivitiesScreen from '../pages/activities';
+import QrCodeScreen from '../pages/qr';
+import ExerciseCardScreen from '../pages/exercisecard';
+import MenuScreen from '../pages/menu';
+import translations from '../configs/translations';
+import Icon from 'react-native-vector-icons/Ionicons';
+
+const Tab = createBottomTabNavigator();
 
 function TabNavigator() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Ana Sayfa</Text>
-    </View>
+    <Tab.Navigator
+      initialRouteName="News"
+      screenOptions={{
+        tabBarActiveTintColor: '#0066cc',
+        tabBarInactiveTintColor: 'gray',
+        headerShown: false
+      }}
+    >
+      <Tab.Screen 
+        name="News" 
+        component={NewsScreen}
+        options={{
+          tabBarLabel: translations.news,
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="newspaper-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen 
+        name="Activities" 
+        component={ActivitiesScreen}
+        options={{
+          tabBarLabel: translations.activities,
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="bicycle-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen 
+        name="QrCode" 
+        component={QrCodeScreen}
+        options={{
+          tabBarLabel: translations.qrcode,
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="qr-code-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen 
+        name="ExerciseCard" 
+        component={ExerciseCardScreen}
+        options={{
+          tabBarLabel: translations.exercisecard,
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="heart-pulse-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen 
+        name="Menu" 
+        component={MenuScreen}
+        options={{
+          tabBarLabel: translations.menu,
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="menu-outline" size={size} color={color} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 }
 

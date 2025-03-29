@@ -52,24 +52,22 @@ render() {
   if (!NewsStore.loading) {
     const {navigation} = this.props;
     return (
-      <SafeAreaView style={styles.container}>
-   
-        <View style={styles.categoryList}>
-
-          
-          <FlatList
-            style={styles.menuList}
-            data={NewsStore.news}
-            renderItem={renderMenuItem(navigation)}
-            keyExtractor={item => item.id.toString()}
-          />
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>{translations.news}</Text>
         </View>
-      
-    </SafeAreaView>
-    
+        <View style={styles.content}>
+          <View style={styles.categoryList}>
+            <FlatList
+              style={styles.menuList}
+              data={NewsStore.news}
+              renderItem={renderMenuItem(navigation)}
+              keyExtractor={item => item.id.toString()}
+            />
+          </View>
+        </View>
+      </ScrollView>
     );
-    
-    
   }
   else {
     return (
@@ -80,7 +78,6 @@ render() {
       </View>
     );
   }
-
 }
 }
 
@@ -99,13 +96,24 @@ const styles = StyleSheet.create({
       },
     container: {
         flex: 1,
-        backgroundColor: "#fbfbfb"
+        backgroundColor: "#f5f5f5"
     },
-    
-    
+    header: {
+        padding: 16,
+        backgroundColor: "#fff",
+        borderBottomWidth: 1,
+        borderBottomColor: "#e0e0e0"
+    },
+    headerText: {
+        fontSize: 24,
+        fontWeight: "bold",
+        color: "#333"
+    },
+    content: {
+        padding: 16
+    },
     categoryTitle: {
         fontWeight: "bold",
-
         paddingTop: 8,
         color: colors.txtDescription
     },
@@ -172,4 +180,9 @@ const styles = StyleSheet.create({
     //   marginVertical: 8,
       borderRadius: 20,
     },
+    indicatorView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 });
