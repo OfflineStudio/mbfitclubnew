@@ -15,6 +15,7 @@ import MembershipScreen from '../pages/membership';
 import LastEntriesScreen from '../pages/lastentries';
 import BranchScreen from '../pages/branch';
 import BranchDetailScreen from '../pages/branch/detail';
+import CareerScreen from '../pages/career';
 import translations from '../configs/translations';
 
 const Stack = createStackNavigator();
@@ -124,6 +125,14 @@ function StackNavigator() {
         options={{
           headerShown: true,
           title: translations.branches
+        }}
+      />
+      <Stack.Screen 
+        name="CareerScreen" 
+        component={CareerScreen}
+        options={{
+          headerShown: true,
+          title: translations.career || 'Kariyer'
         }}
       />
     </Stack.Navigator>

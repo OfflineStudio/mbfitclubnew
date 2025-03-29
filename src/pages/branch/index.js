@@ -1,6 +1,18 @@
 /* eslint-disable */
-import React, { useEffect } from 'react';
-import { Text, View, TouchableOpacity, SafeAreaView, StyleSheet, ScrollView, Image, FlatList, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { 
+  Text, 
+  View, 
+  TouchableOpacity, 
+  SafeAreaView, 
+  StyleSheet, 
+  ScrollView, 
+  FlatList, 
+  ActivityIndicator,
+  TextInput,
+  Platform,
+  Dimensions
+} from 'react-native';
 import { observer } from 'mobx-react';
 import { useNavigation } from '@react-navigation/native';
 import AuthStore from '../../stores/AuthStore';
@@ -9,29 +21,31 @@ import colors from '../../components/colors';
 import BranchStore from '../../stores/BranchStore';
 import translations from '../../configs/translations';
 
-const Menu = ({ navigation, id, name }) => (
-  <TouchableOpacity onPress={() => {
-    BranchStore.setBranch(id, name);
-    navigation.navigate("BranchDetailScreen");
-  }}>
-    <View style={styles.menuItem}>
-      <View style={styles.mennuIconContainer}>
-        <Icon name='info-circle' style={styles.menuIcon} size={22} />
-      </View>
-      <View style={styles.menuTitleContainer}>
-        <Text style={styles.menuTitle}>{name}</Text>
-      </View>
-      <Icon name='angle-right' style={styles.menuArrow} size={16} />
-    </View>
-  </TouchableOpacity>
-);
+const { width } = Dimensions.get('window');
 
-const renderMenuItem = navigation => ({ item }) => (
-  <Menu navigation={navigation} {...item} />
+const BranchItem = ({ navigation, id, name }) => (
+  <TouchableOpacity 
+    style={styles.branchCard}
+    onPress={() => {
+      BranchStore.setBranch(id, name);
+      navigation.navigate("BranchDetailScreen");
+    }}
+    activeOpacity={0.7}
+  >
+    <View style={styles.branchIconContainer}>
+      <Icon name="building" style={styles.branchIcon} size={24} />
+    </View>
+    <View style={styles.branchInfoContainer}>
+      <Text style={styles.branchName}>{name}</Text>
+      <Text style={styles.branchSubtext}>Detaylar için tıklayın</Text>
+    </View>
+    <Icon name="angle-right" style={styles.branchArrow} size={24} />
+  </TouchableOpacity>
 );
 
 const BranchScreen = observer(() => {
   const navigation = useNavigation();
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (!AuthStore.isSuccess) {
@@ -41,100 +55,179 @@ const BranchScreen = observer(() => {
     BranchStore.getBranch();
   }, [navigation]);
 
+  const filteredBranches = BranchStore.branches.filter(branch =>
+    branch.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const renderBranchItem = ({ item }) => (
+    <BranchItem navigation={navigation} {...item} />
+  );
+
   if (!BranchStore.loading) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.categoryList}>
-          <FlatList
-            style={styles.menuList}
-            data={BranchStore.branches}
-            renderItem={renderMenuItem(navigation)}
-            keyExtractor={item => item.id.toString()}
+        <View style={styles.header}>
+          <Icon name="map-marker" size={22} color="#fff" style={styles.headerIcon} />
+          <Text style={styles.headerText}>
+            Size en yakın MB Fit Club şubesini bulun
+          </Text>
+        </View>
+
+        <View style={styles.searchContainer}>
+          <Icon name="search" size={20} color="#999" style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Şube ara..."
+            placeholderTextColor="#999"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
           />
         </View>
+
+        <FlatList
+          data={filteredBranches}
+          renderItem={renderBranchItem}
+          keyExtractor={item => item.id.toString()}
+          contentContainerStyle={styles.branchList}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Icon name="info-circle" size={40} color="#999" />
+              <Text style={styles.emptyText}>Şube bulunamadı</Text>
+            </View>
+          }
+        />
       </SafeAreaView>
     );
-  } else {
-    return (
-      <View style={styles.indicatorView}>
-        <View>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
-      </View>
-    );
+  }
+  
+  return (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color="#7fcac6" />
+    </View>
+  );
+});
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff'
+  },
+  header: {
+    flexDirection: 'row',
+    backgroundColor: '#7fcac6',
+    padding: 16,
+    alignItems: 'center'
+  },
+  headerIcon: {
+    marginRight: 12
+  },
+  headerText: {
+    flex: 1,
+    color: '#fff',
+    fontSize: 16,
+    lineHeight: 22
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F8F9FA',
+    margin: 16,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  searchIcon: {
+    marginRight: 8
+  },
+  searchInput: {
+    flex: 1,
+    paddingVertical: Platform.OS === 'ios' ? 12 : 8,
+    fontSize: 16,
+    color: '#333'
+  },
+  branchList: {
+    paddingHorizontal: 16,
+    paddingBottom: 16
+  },
+  branchCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    marginBottom: 12,
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  branchIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#7fcac6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16
+  },
+  branchIcon: {
+    color: '#fff'
+  },
+  branchInfoContainer: {
+    flex: 1
+  },
+  branchName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 4
+  },
+  branchSubtext: {
+    fontSize: 14,
+    color: '#666'
+  },
+  branchArrow: {
+    color: '#7fcac6'
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 32
+  },
+  emptyText: {
+    marginTop: 8,
+    fontSize: 16,
+    color: '#999'
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff'
   }
 });
 
 export default BranchScreen;
-
-const styles = StyleSheet.create({
-    avoidingView: {
-        flex: 1,
-        width: null,
-        height: null,
-        resizeMode: "cover"
-      },
-      scrollView: {
-     
-      },
-    container: {
-        flex: 1,
-        backgroundColor: "#fbfbfb"
-    },
-    
-      logo: {
-        width: null, height: 150
-       
-       
-      },
-    categoryTitle: {
-        fontWeight: "bold",
-
-        paddingTop: 8,
-        color: colors.txtDescription
-    },
-    categoryList: {
-        paddingHorizontal: 16,
-    },
-    categoryItem: {
-    },
-    menuList: {
-    },
-    menuItem: {
-        flexDirection: "row",
-        paddingVertical: 4,
-        paddingHorizontal: 8,
-        marginVertical: 8,
-        borderRadius: 4,
-        borderWidth: 1,
-        borderColor: "#c4c4c4",
-        backgroundColor: "#fbfbfb"
-    },
-    mennuIconContainer: {
-        borderRadius: 4,
-        width: 42,
-        height: 42,
-        backgroundColor: "#92bcf0",
-        marginRight: 2
-    },
-    menuIcon: {
-        color: colors.txtWhite,
-        paddingVertical: 9,
-        paddingLeft: 11,
-        backgroundColor:"#ffcc00"
-    },
-    menuArrow: {
-        color: colors.txtDark,
-        textAlign: "right",
-        paddingHorizontal: 8,
-        paddingVertical: 12
-    },
-    menuTitleContainer: {
-        flex: 1
-    },
-    menuTitle: {
-        color: colors.txtDark,
-        fontWeight: "bold",
-        padding: 11,
-    }
-});

@@ -1,23 +1,22 @@
 /* eslint-disable */
 import React, { useEffect, useCallback } from 'react';
 import {
-  Button,
   Text,
   View,
   ActivityIndicator,
   Dimensions,
   Image,
-  TextInput,
   KeyboardAvoidingView,
   ScrollView,
   Alert,
-  StyleSheet
+  StyleSheet,
+  TouchableOpacity,
+  Platform
 } from 'react-native';
 import { observer } from 'mobx-react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from "react-native-image-picker"
-import { TextInputMask } from 'react-native-masked-text'
 import CustomerIdentityStore from '../../stores/CustomerIdentityStore';
 import translations from '../../configs/translations'
 import DatePicker from 'react-native-date-picker'
@@ -29,13 +28,12 @@ const CustomerIdentityScreen = observer(() => {
   const handleOpenFileClick = useCallback(() => {
     const options = {
       title: translations.selectphoto,
-      includeBase64:true,
+      includeBase64: true,
       storageOptions: {
         skipBackup: true,
         path: 'images',
       },
       mediaType: 'photo',
-      // maxWidth: 600,
       maxHeight: 375,
       cancelButtonTitle: translations.close,
       takePhotoButtonTitle: translations.takephoto,
@@ -65,160 +63,193 @@ const CustomerIdentityScreen = observer(() => {
         '',
         [
           {
-            text: 'OK', onPress: () => {  CustomerIdentityStore.getInfo();
-              navigation.navigate("CustomerIdentityScreen");}
+            text: 'Tamam', 
+            onPress: () => {
+              CustomerIdentityStore.getInfo();
+              navigation.navigate("CustomerIdentityScreen");
+            }
           },
         ],
         { cancelable: false },
       );
     },
-      (text) => {
-        Alert.alert(
-          '',
-          text,
-          [
-            { text: 'OK' },
-          ],
-          { cancelable: false },
-        );
-      })
+    (text) => {
+      Alert.alert(
+        '',
+        text,
+        [
+          { text: 'Tamam' },
+        ],
+        { cancelable: false },
+      );
+    })
   }, [navigation]);
 
   if (!CustomerIdentityStore.loading) {
     let img;
   
-    if (CustomerIdentityStore.PhotoUrl=="") {
-      img = <Image source={require('../../assets/images/preview.png')} style={docStyle.img} />
-     
+    if (CustomerIdentityStore.PhotoUrl === "") {
+      img = <Image source={require('../../assets/images/preview.png')} style={styles.profileImage} />
     } else {
-    
       let source = { uri: CustomerIdentityStore.PhotoUrl };
-      img = <Image source={source} style={docStyle.img} />
+      img = <Image source={source} style={styles.profileImage} />
     }
 
     return (
-      <KeyboardAvoidingView style={{ flex: 1, width: null, height: null, resizeMode: 'cover' }} >
-        <ScrollView style={styles.scrollView}>
-          <View>
-            <View style={styles.topBannerContainer}>
-              <Icon style={styles.topBannerIcon} name={"info-circle"} size={22} />
-              <Text style={styles.topBannerText}>
+      <KeyboardAvoidingView 
+        style={styles.container} 
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+          <View style={styles.content}>
+            <View style={styles.header}>
+              <Icon name="info-circle" size={22} color="#fff" style={styles.headerIcon} />
+              <Text style={styles.headerText}>
                 Sizlere daha iyi hizmet verebilmek için bazı bilgilerinize ihtiyaç duyuyoruz.
               </Text>
             </View>
-             <View style={styles.inputView}>
-              <Text style={styles.inputLabel}>{translations.profilphoto}</Text>
-              {img}
-              {/* <Button
-              title={translations.selectprofilphoto}
-              onPress={this.handleOpenFileClick}
-            /> */}
-            </View> 
-          
-            {/* <View style={styles.inputView}>
-              <Text style={styles.inputLabel}>{translations.phonenumber}</Text>
-              <TextInput
-            style={styles.textInput}
-            placeholderTextColor={'gray'}
-            placeholder={translations.phonenumber}
-            value={CustomerIdentityStore.PhoneNumber}
-            onChangeText={text => { CustomerIdentityStore.setPhoneNumber(text) }}           
-            keyboardType="phone-pad"
-           
-          />
-            </View> */}
-              <View style={styles.inputView}>
-              <Text style={styles.inputLabel}>{translations.birthdate}  </Text>
-              {/* <DatePicker date={new Date()} onDateChange={CustomerIdentityStore.setBirthdate} mode="date" /> */}
-              <Button title={translations.selectBirthDate} onPress={() => CustomerIdentityStore.setBirthDateModal(true)} />
-      <DatePicker modal open={ CustomerIdentityStore.BirthDateModal} date={new Date(CustomerIdentityStore.BirthDate)} mode="date" confirmText={translations.sumbit} cancelText={translations.cancel} 
-        onConfirm={(date) => {
-          CustomerIdentityStore.setBirthdate(date)
-          CustomerIdentityStore.setBirthDateModal(false)
-          handleSubmitClick()
-        }}
-        onCancel={() => {
-          CustomerIdentityStore.setBirthDateModal(false)
-        }}
-      />
-              
+
+            <View style={styles.profileSection}>
+              <Text style={styles.sectionTitle}>{translations.profilphoto}</Text>
+              <View style={styles.imageContainer}>
+                {img}
+                {/* <TouchableOpacity 
+                  style={styles.imagePickerButton}
+                  onPress={handleOpenFileClick}
+                >
+                  <Icon name="camera" size={20} color="#fff" />
+                  <Text style={styles.imagePickerText}>{translations.selectprofilphoto}</Text>
+                </TouchableOpacity>*/} 
+              </View>
             </View>
-             
-            {/* <View style={styles.inputView}>
-              <Button
-                title="Kaydet"
-                disabled={!CustomerIdentityStore.isValid}
-                onPress={this.handleSubmitClick}
-              />
-            </View> */}
+
+            <View style={styles.birthdateSection}>
+              <Text style={styles.sectionTitle}>{translations.birthdate}</Text>
+              <TouchableOpacity 
+                style={styles.datePickerButton}
+                onPress={() => CustomerIdentityStore.setBirthDateModal(true)}
+              >
+                <Icon name="calendar" size={20} color="#7fcac6" style={styles.dateIcon} />
+                <Text style={styles.dateText}>
+                  {CustomerIdentityStore.BirthDate 
+                    ? new Date(CustomerIdentityStore.BirthDate).toLocaleDateString('tr-TR')
+                    : translations.selectBirthDate
+                  }
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <DatePicker 
+              modal 
+              open={CustomerIdentityStore.BirthDateModal}
+              date={new Date(CustomerIdentityStore.BirthDate || Date.now())}
+              mode="date"
+              confirmText={translations.sumbit}
+              cancelText={translations.cancel}
+              onConfirm={(date) => {
+                CustomerIdentityStore.setBirthdate(date)
+                CustomerIdentityStore.setBirthDateModal(false)
+                handleSubmitClick()
+              }}
+              onCancel={() => {
+                CustomerIdentityStore.setBirthDateModal(false)
+              }}
+            />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
     );
-  }
-  else {
+  } else {
     return (
-      <View style={styles.indicatorView}>
-        <View>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#7fcac6" />
       </View>
     );
   }
 });
 
-const docStyle = {
-  img: {
-    width: width * 0.45,
-    height: height * 0.27,
-    margin: 20
-  }
-}
-
-export default CustomerIdentityScreen;
-
 const styles = StyleSheet.create({
-  indicatorView: {
+  container: {
     flex: 1,
-    alignContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "center"
+    backgroundColor: '#fff'
   },
   scrollView: {
-    margin: 14
+    flex: 1
   },
-  topBannerContainer: {
-    flexDirection: "row",
-    backgroundColor: "#7fcac6",
-    color: "#ffffff",
-    padding: 8,
-    borderRadius: 4,
-    marginBottom: 10
+  content: {
+    padding: 16
   },
-  topBannerIcon: {
-    color: "#ffffff",
-    marginRight: 6,
-    marginTop: 2
+  header: {
+    flexDirection: 'row',
+    backgroundColor: '#7fcac6',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 24,
+    alignItems: 'center'
   },
-  topBannerText: {
-    color: "#ffffff"
+  headerIcon: {
+    marginRight: 12
   },
-  radioFormView: {
-    
+  headerText: {
+    flex: 1,
+    color: '#fff',
+    fontSize: 16,
+    lineHeight: 22
   },
-  inputView: {
-    marginVertical: 6
+  profileSection: {
+    marginBottom: 24
   },
-  inputLabel: {
-    paddingBottom: 6
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 12
   },
-  textInput: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+  imageContainer: {
+    alignItems: 'center'
+  },
+  profileImage: {
+    width: width * 0.4,
+    height: width * 0.4,
+    borderRadius: (width * 0.4) / 2,
+    marginBottom: 16
+  },
+  imagePickerButton: {
+    flexDirection: 'row',
+    backgroundColor: '#7fcac6',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 25,
+    alignItems: 'center'
+  },
+  imagePickerText: {
+    color: '#fff',
+    marginLeft: 8,
+    fontSize: 16
+  },
+  birthdateSection: {
+    marginBottom: 24
+  },
+  datePickerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
-    borderRadius: 4,
-    borderColor: "lightgray",
-     color:"gray"
+    borderColor: '#7fcac6',
+    borderRadius: 8,
+    padding: 12
+  },
+  dateIcon: {
+    marginRight: 12
+  },
+  dateText: {
+    fontSize: 16,
+    color: '#333'
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
-})
+});
+
+export default CustomerIdentityScreen;
