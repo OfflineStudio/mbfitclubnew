@@ -68,7 +68,7 @@ class LoginScreen extends Component {
             <View style={styles.logoView}>
               <Image
                 style={styles.logo}
-                source={require('../../assets/images/corelogo.png')}
+                source={require('../../assets/images/logo.png')}
                 title={'logo'}
               />
             </View>

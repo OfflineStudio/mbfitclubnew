@@ -1,5 +1,7 @@
 import React from 'react';
+import { View, Image, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
 import NewsScreen from '../pages/news';
 import ActivitiesScreen from '../pages/activities';
 import QrCodeScreen from '../pages/qr';
@@ -12,6 +14,30 @@ import ActivitiesStore from '../stores/ActivitiesStore';
 
 const Tab = createBottomTabNavigator();
 
+const CustomHeader = () => {
+  const navigation = useNavigation();
+  
+  return (
+    <View style={styles.headerContainer}>
+      <View style={styles.headerContent}>
+        <View style={styles.logoContainer}>
+          <Image
+            source={require('../assets/images/logo.png')}
+            style={styles.logo}
+           
+          />
+        </View>
+        <TouchableOpacity
+          style={styles.notificationButton}
+          onPress={() => navigation.navigate('NotificationScreen')}
+        >
+          <Icon name="bell" size={24} color="#7fcac6" />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
+
 function TabNavigator() {
   return (
     <Tab.Navigator
@@ -19,7 +45,7 @@ function TabNavigator() {
       screenOptions={{
         tabBarActiveTintColor: '#0066cc',
         tabBarInactiveTintColor: 'gray',
-        headerShown: false
+        header: () => <CustomHeader />
       }}
     >
       <Tab.Screen 
@@ -98,5 +124,44 @@ function TabNavigator() {
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  headerContainer: {
+    backgroundColor: '#fff',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    height: Platform.OS === 'ios' ? 88 : 56,
+    paddingTop: Platform.OS === 'ios' ? 40 : 0,
+  },
+  logoContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  logo: {
+    height: 30,
+    width: 120,
+  },
+  notificationButton: {
+    padding: 8,
+    position: 'absolute',
+    right: 16,
+    top: Platform.OS === 'ios' ? 46 : 16,
+  },
+});
 
 export default TabNavigator; 
