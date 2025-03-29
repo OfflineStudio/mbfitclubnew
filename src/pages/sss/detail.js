@@ -1,63 +1,51 @@
 /* eslint-disable */
-import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, SafeAreaView, StyleSheet, ScrollView, Image,FlatList,ActivityIndicator } from 'react-native';
+import React, { useEffect } from 'react';
+import { Text, View, TouchableOpacity, SafeAreaView, StyleSheet, ScrollView, Image, FlatList, ActivityIndicator } from 'react-native';
 import { observer } from 'mobx-react';
-import { withNavigation } from 'react-navigation';
- 
-  
-import AuthStore  from '../../stores/AuthStore';
+import { useNavigation } from '@react-navigation/native';
+
+import AuthStore from '../../stores/AuthStore';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../../components/colors';
 import SSSStore from '../../stores/SSSStore';
+import translations from '../../configs/translations';
 
-import translations from '../../configs/translations'
+const SSSDetailScreen = observer(() => {
+  const navigation = useNavigation();
 
-@observer
-class SSSDetailScreen extends Component {
-    static navigationOptions = ({ navigation }) => ({
-        title: translations.sss,
-        headerLayoutPreset: 'center'
-      });
-  componentDidMount(){   
-    if(!AuthStore.isSuccess)
-    {
+  useEffect(() => {
+    if (!AuthStore.isSuccess) {
       AuthStore.userLogout();
-      this.props.navigation.navigate("LoginPage");
+      navigation.navigate("LoginPage");
     }
-   
-} 
-   
-      
-render() {
+  }, [navigation]);
+
   if (!SSSStore.loading) {
-    const {navigation} = this.props;
     return (
-        <View style={styles.itemView}>
+      <View style={styles.itemView}>
         <View style={styles.itemRow}>
-            <Text style={styles.itemRowLabel}>{SSSStore.selectShortText}</Text>
-            <Text style={styles.itemRowValue}>{SSSStore.selectLongText}</Text>
-        </View>
-    </View>
-    
-    );
-    
-    
-  }
-  else {
-    return (
-      <View style={styles.indicatorView}>
-        <View>
-          <ActivityIndicator size="large" color="#0000ff" />
+          <Text style={styles.itemRowLabel}>{SSSStore.selectShortText}</Text>
+          <Text style={styles.itemRowValue}>{SSSStore.selectLongText}</Text>
         </View>
       </View>
     );
   }
 
-}
-}
+  return (
+    <View style={styles.indicatorView}>
+      <View>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    </View>
+  );
+});
 
-export default withNavigation(SSSDetailScreen);
+SSSDetailScreen.navigationOptions = {
+  title: translations.sss,
+  headerLayoutPreset: 'center'
+};
 
+export default SSSDetailScreen;
 
 const styles = StyleSheet.create({
     itemView: {

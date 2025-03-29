@@ -27,7 +27,7 @@ export default menuStructure = [
     },
     {
         id: 2,
-        category: "CoreFitAcademy",
+        category: "Mb Fit Club",
         menus: [
             {
                 id: 1,
@@ -41,7 +41,7 @@ export default menuStructure = [
                 title: translations.branches,
                 icon: "random",
                 screen: "BranchScreen"
-                ,isActive:false
+                ,isActive:true
             },
             {
                 id: 3,
@@ -63,7 +63,7 @@ export default menuStructure = [
                 title:  translations.career,
                 icon: "vcard",
                 screen: "CareerScreen"
-                ,isActive:false
+                ,isActive:true
             }
         ]
     },

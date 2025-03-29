@@ -1,92 +1,81 @@
 /* eslint-disable */
-import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, SafeAreaView, StyleSheet, ScrollView, Image,FlatList,ActivityIndicator } from 'react-native';
+import React, { useEffect } from 'react';
+import { Text, View, TouchableOpacity, SafeAreaView, StyleSheet, ScrollView, Image, FlatList, ActivityIndicator } from 'react-native';
 import { observer } from 'mobx-react';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
  
-  
-import AuthStore  from '../../stores/AuthStore';
+import AuthStore from '../../stores/AuthStore';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../../components/colors';
 import SSSStore from '../../stores/SSSStore';
+import translations from '../../configs/translations';
 
-import translations from '../../configs/translations'
-const Menu = ({navigation, longText,shortText}) => (
-   
-  <TouchableOpacity onPress={() => {
-    SSSStore.setSSS(longText,shortText);
-    
-      navigation.navigate("SSSDetailScreen")
-    
-  }}>
-        <View style={styles.menuItem}>
-            <View style={styles.mennuIconContainer}>
-                <Icon name='info-circle' style={styles.menuIcon} size={22} />
-            </View>
-            <View style={styles.menuTitleContainer}>
-                <Text style={styles.menuTitle}>{shortText}</Text>
-            </View>
-            <Icon name='angle-right' style={styles.menuArrow} size={16} />
+const Menu = ({ longText, shortText }) => {
+  const navigation = useNavigation();
+  
+  return (
+    <TouchableOpacity onPress={() => {
+      SSSStore.setSSS(longText, shortText);
+      navigation.navigate("SSSDetailScreen");
+    }}>
+      <View style={styles.menuItem}>
+        <View style={styles.mennuIconContainer}>
+          <Icon name='info-circle' style={styles.menuIcon} size={22} />
         </View>
+        <View style={styles.menuTitleContainer}>
+          <Text style={styles.menuTitle}>{shortText}</Text>
+        </View>
+        <Icon name='angle-right' style={styles.menuArrow} size={16} />
+      </View>
     </TouchableOpacity>
   );
-  const renderMenuItem = navigation => ({item}) => (
-    <Menu navigation={navigation} {...item} />
-  );
-@observer
-class SSSScreen extends Component {
-    static navigationOptions = ({ navigation }) => ({
-        title: translations.sss,
-        headerLayoutPreset: 'center'
-      });
-  componentDidMount(){   
-    if(!AuthStore.isSuccess)
-    {
+};
+
+const renderMenuItem = () => ({ item }) => (
+  <Menu {...item} />
+);
+
+const SSSScreen = observer(() => {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (!AuthStore.isSuccess) {
       AuthStore.userLogout();
-      this.props.navigation.navigate("LoginPage");
+      navigation.navigate("LoginPage");
     }
     SSSStore.getSSS();
-} 
-   
-      
-render() {
+  }, [navigation]);
+
   if (!SSSStore.loading) {
-    const {navigation} = this.props;
     return (
       <SafeAreaView style={styles.container}>
-   
         <View style={styles.categoryList}>
-
-          
           <FlatList
             style={styles.menuList}
             data={SSSStore.sss}
-            renderItem={renderMenuItem(navigation)}
+            renderItem={renderMenuItem()}
             keyExtractor={item => item.id.toString()}
           />
         </View>
-      
-    </SafeAreaView>
-    
+      </SafeAreaView>
     );
-    
-    
   }
-  else {
-    return (
-      <View style={styles.indicatorView}>
-        <View>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
+
+  return (
+    <View style={styles.indicatorView}>
+      <View>
+        <ActivityIndicator size="large" color="#0000ff" />
       </View>
-    );
-  }
+    </View>
+  );
+});
 
-}
-}
+SSSScreen.navigationOptions = {
+  title: translations.sss,
+  headerLayoutPreset: 'center'
+};
 
-export default withNavigation(SSSScreen);
-
+export default SSSScreen;
 
 const styles = StyleSheet.create({
     avoidingView: {

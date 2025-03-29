@@ -1,29 +1,25 @@
 /* eslint-disable */
-import React, { Component } from 'react'; 
+import React from 'react';
 import { observer } from 'mobx-react';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 import { WebView } from 'react-native-webview';
 import LoginStore from '../../stores/LoginStore';
+import translations from '../../configs/translations';
 
-import translations from '../../configs/translations'
-@observer
-class AboutUsScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: translations.aboutus,
-    headerLayoutPreset: 'center'
-  });
+const AboutUsScreen = observer(() => {
+  return (
+    <WebView
+      source={{ uri: LoginStore.aboutUsUrl }}
+      startInLoadingState={true}
+      originWhitelist={['*']}
+      ignoreSslError={true}
+    />
+  );
+});
 
-  render() {
-     
-      return (
-        <WebView
-          source={{uri: LoginStore.aboutUsUrl}}
-          startInLoadingState={true}
-          originWhitelist={['*']}
-          ignoreSslError={true}
-        />
-      );
-     
-  }
-}
-export default withNavigation(AboutUsScreen)
+AboutUsScreen.navigationOptions = {
+  title: translations.aboutus,
+  headerLayoutPreset: 'center'
+};
+
+export default AboutUsScreen;

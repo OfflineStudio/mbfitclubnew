@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { Component } from 'react';
+import React from 'react';
 import {
   Button,
   Text,
@@ -13,19 +13,17 @@ import {
 } from 'react-native';
 import { observer } from 'mobx-react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 
 import ChangePasswordStore from '../../stores/ChangePasswordStore';
 import translations from '../../configs/translations'
 
-@observer
-class ChangePasswordScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: translations.changepassword,
-    headerLayoutPreset: 'center'
-  });
+const ChangePasswordScreen = observer(() => {
+  const navigation = useNavigation();
+  const passwordInputRef = React.useRef();
+  const passwordInput2Ref = React.useRef();
    
-  handleSubmitClick = () => {
+  const handleSubmitClick = () => {
     ChangePasswordStore.change(() => {
       Alert.alert(
         'Şifreniz Değiştirilmiştir.',
@@ -33,7 +31,7 @@ class ChangePasswordScreen extends Component {
         [
           {
             text: 'OK', onPress: () => {   
-              this.props.navigation.navigate("LoginScreen");}
+              navigation.navigate("LoginScreen");}
           },
         ],
         { cancelable: false },
@@ -51,60 +49,76 @@ class ChangePasswordScreen extends Component {
       })
   }
 
-  
-  render() {
-   
-    if (!ChangePasswordStore.loading) {
-   
-
-      return (
-        <KeyboardAvoidingView style={{ flex: 1, width: null, height: null, resizeMode: 'cover' }} >
-          <ScrollView style={styles.scrollView}>
-            <View>
-               
-            
-            
-              <View style={styles.inputView}>
-                <Text style={styles.inputLabel}>{translations.oldpassword}</Text>
-                
-             <TextInput   placeholderTextColor={'gray'} style={styles.textInput} placeholder={translations.oldpassword} secureTextEntry onChangeText={text =>{ChangePasswordStore.setOldPassword(text)}} returnKeyType={"next"} onSubmitEditing={()=>this.passwordInput.focus()}/>
-              </View>
-              <View style={styles.inputView}>
-                <Text style={styles.inputLabel}>{translations.newpassword}</Text>
-                
-                <TextInput  placeholderTextColor={'gray'}  style={styles.textInput} placeholder={translations.newpassword}    secureTextEntry  onChangeText={text =>{ChangePasswordStore.setPassword(text)}} returnKeyType={"next"} ref={input=>this.passwordInput=input}/>
-              </View>
-              <View style={styles.inputView}>
-                <Text style={styles.inputLabel}>{translations.newpasswordagain}</Text>
-                
-                <TextInput  placeholderTextColor={'gray'} style={styles.textInput} placeholder={translations.newpasswordagain}   secureTextEntry  onChangeText={text =>{ChangePasswordStore.setPasswordConfim(text)}} returnKeyType={"go"} ref={input=>this.passwordInput2=input}/>
-      
-                </View>
-              <View style={styles.inputView}>
-                <Button
-                  title="Kaydet"
-                  disabled={!ChangePasswordStore.isValid}
-                  onPress={this.handleSubmitClick}
-                />
-              </View>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      );
-    }
-    else {
-      return (
-        <View style={styles.indicatorView}>
+  if (!ChangePasswordStore.loading) {
+    return (
+      <KeyboardAvoidingView style={{ flex: 1, width: null, height: null, resizeMode: 'cover' }} >
+        <ScrollView style={styles.scrollView}>
           <View>
-            <ActivityIndicator size="large" color="#0000ff" />
+            <View style={styles.inputView}>
+              <Text style={styles.inputLabel}>{translations.oldpassword}</Text>
+              <TextInput   
+                placeholderTextColor={'gray'} 
+                style={styles.textInput} 
+                placeholder={translations.oldpassword} 
+                secureTextEntry 
+                onChangeText={text => ChangePasswordStore.setOldPassword(text)} 
+                returnKeyType={"next"} 
+                onSubmitEditing={() => passwordInputRef.current.focus()}
+              />
+            </View>
+            <View style={styles.inputView}>
+              <Text style={styles.inputLabel}>{translations.newpassword}</Text>
+              <TextInput  
+                placeholderTextColor={'gray'}  
+                style={styles.textInput} 
+                placeholder={translations.newpassword}    
+                secureTextEntry  
+                onChangeText={text => ChangePasswordStore.setPassword(text)} 
+                returnKeyType={"next"} 
+                ref={passwordInputRef}
+                onSubmitEditing={() => passwordInput2Ref.current.focus()}
+              />
+            </View>
+            <View style={styles.inputView}>
+              <Text style={styles.inputLabel}>{translations.newpasswordagain}</Text>
+              <TextInput  
+                placeholderTextColor={'gray'} 
+                style={styles.textInput} 
+                placeholder={translations.newpasswordagain}   
+                secureTextEntry  
+                onChangeText={text => ChangePasswordStore.setPasswordConfim(text)} 
+                returnKeyType={"go"} 
+                ref={passwordInput2Ref}
+              />
+            </View>
+            <View style={styles.inputView}>
+              <Button
+                title="Kaydet"
+                disabled={!ChangePasswordStore.isValid}
+                onPress={handleSubmitClick}
+              />
+            </View>
           </View>
-        </View>
-      );
-    }
+        </ScrollView>
+      </KeyboardAvoidingView>
+    );
   }
-}
+  
+  return (
+    <View style={styles.indicatorView}>
+      <View>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    </View>
+  );
+});
 
-export default withNavigation(ChangePasswordScreen)
+ChangePasswordScreen.navigationOptions = {
+  title: translations.changepassword,
+  headerLayoutPreset: 'center'
+};
+
+export default ChangePasswordScreen;
 
 const styles = StyleSheet.create({
   indicatorView: {

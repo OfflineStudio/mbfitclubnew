@@ -1,94 +1,70 @@
 /* eslint-disable */
-import React, { Component } from 'react';
-import { withNavigation } from 'react-navigation';
-import { StyleSheet, Text, SafeAreaView, FlatList, View,Image,KeyboardAvoidingView, ScrollView } from 'react-native';
+import React, { useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, Text, SafeAreaView, FlatList, View, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { observer } from 'mobx-react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../../components/colors';
- 
-import AuthStore  from '../../stores/AuthStore';
-  import NotificationStore from '../../stores/NotificationStore';
+import AuthStore from '../../stores/AuthStore';
+import NotificationStore from '../../stores/NotificationStore';
 import translations from '../../configs/translations';
-@observer
-class NotificationScreen extends Component {
-    static navigationOptions = ({ navigation }) => ({
-        title: translations.notification,
-        headerLayoutPreset: 'center'
-      });
-    componentDidMount(){   
-        console.log(NotificationStore.notifAlert)
-        if(!AuthStore.isSuccess)
-        {
-          AuthStore.userLogout();
-          this.props.navigation.navigate("LoginPage");
-        }
-        NotificationStore.getNotification();
-        NotificationStore.setAlert(false);
-    } 
-    
-    render() {
-        const Menu = ({ navigation, createDate, message,subject,branchName }) => (
-    
-            
-                <View style={styles.menuItem}>
-                    <Text style={styles.mennuIconContainer}>
-                    {branchName}    {createDate}
-                    </Text>
-                    <View style={styles.menuTitleContainer}>
-                        <Text style={styles.menuTitle}>{subject}</Text>
-                    </View>
-                    <View style={styles.menuTitleContainer}>
-                        <Text style={styles.menuTitle}>{message}</Text>
-                    </View>
-                    
-                </View>
-        
-        );
 
-        const renderMenuItem = (navigation) => ({ item }) => (
-            <Menu navigation={navigation} {...item} />
-        );
-        return (
-            
- <ScrollView style={styles.scrollView}>
- <SafeAreaView style={styles.container}>
-                
-           
-                 <Image
-                style={styles.logo}
-                source={require('../../assets/images/group-exercises-min.jpg')}
-                title={'logo'}
-              />
-            
-        
+const Menu = ({ createDate, message, subject, branchName }) => (
+  <View style={styles.menuItem}>
+    <Text style={styles.mennuIconContainer}>
+      {branchName} {createDate}
+    </Text>
+    <View style={styles.menuTitleContainer}>
+      <Text style={styles.menuTitle}>{subject}</Text>
+    </View>
+    <View style={styles.menuTitleContainer}>
+      <Text style={styles.menuTitle}>{message}</Text>
+    </View>
+  </View>
+);
 
-          
-                <FlatList
-                    style={styles.categoryList}
-                    data={NotificationStore.notif}
-                    renderItem={renderMenuItem(this.props.navigation)}
-                    keyExtractor={item => item.id.toString()}
-                />
-           
+const renderMenuItem = () => ({ item }) => (
+  <Menu {...item} />
+);
 
-                
+const NotificationScreen = observer(() => {
+  const navigation = useNavigation();
 
-               
-               
-
-              
-
-               
-            </SafeAreaView>
- </ScrollView>
-
-          
-           
-        )
+  useEffect(() => {
+    console.log(NotificationStore.notifAlert);
+    if (!AuthStore.isSuccess) {
+      AuthStore.userLogout();
+      navigation.navigate("LoginPage");
     }
-}
+    NotificationStore.getNotification();
+    NotificationStore.setAlert(false);
+  }, [navigation]);
 
-export default withNavigation(NotificationScreen)
+  return (
+    <ScrollView style={styles.scrollView}>
+      <SafeAreaView style={styles.container}>
+        <Image
+          style={styles.logo}
+          source={require('../../assets/images/group-exercises-min.jpg')}
+          title={'logo'}
+        />
+        <FlatList
+          style={styles.categoryList}
+          data={NotificationStore.notif}
+          renderItem={renderMenuItem()}
+          keyExtractor={item => item.id.toString()}
+        />
+      </SafeAreaView>
+    </ScrollView>
+  );
+});
+
+NotificationScreen.navigationOptions = {
+  title: translations.notification,
+  headerLayoutPreset: 'center'
+};
+
+export default NotificationScreen;
 
 const styles = StyleSheet.create({
     avoidingView: {
