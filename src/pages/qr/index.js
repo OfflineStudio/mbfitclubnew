@@ -1,59 +1,55 @@
 /* eslint-disable */
-import React, { Component } from 'react';
-import { Text, View,TouchableOpacity,Alert} from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Text, View, TouchableOpacity, Alert } from 'react-native';
 import { observer } from 'mobx-react';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 import QrStore from '../../stores/QrStore';
 import styles from '../../theme/styles';
- 
-import translations from '../../configs/translations'
+import translations from '../../configs/translations';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
- 
-@observer
-class QrCodeScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: "QR",
-    headerLayoutPreset: 'center'
-  });
-  onSuccess = e => {   
+
+const QrCodeScreen = observer(() => {
+  const navigation = useNavigation();
+  const scannerRef = useRef(null);
+
+  const onSuccess = e => {
     QrStore.setToken(e.data);
-    QrStore.readQr(() => {
-      this.props.navigation.navigate("LastEntriesScreen");
-      
-    },
+    QrStore.readQr(
+      () => {
+        navigation.navigate("LastEntriesScreen");
+      },
       (text) => {
         Alert.alert(
           '',
           text,
           [
-            {text: 'OK', onPress: () => {
-              this.scanner.reactivate();
-           
-            }},
+            {
+              text: 'OK',
+              onPress: () => {
+                scannerRef.current?.reactivate();
+              }
+            },
           ],
           { cancelable: false },
         );
-      })
+      }
+    );
   };
-  componentDidMount() {
-    this.scanner.reactivate();
-  }
 
+  useEffect(() => {
+    scannerRef.current?.reactivate();
+  }, []);
 
-  render() {
-   
-      return (
-        <QRCodeScanner
-        onRead={this.onSuccess}
-        reactivate={true}
-        reactivateTimeout={3000}
-        ref={(node) => { this.scanner = node }}
-        flashMode={RNCamera.Constants.FlashMode.auto}
-        
-      />
-      );
-   
-  }
-}
-export default withNavigation(QrCodeScreen)
+  return (
+    <QRCodeScanner
+      onRead={onSuccess}
+      reactivate={true}
+      reactivateTimeout={3000}
+      ref={scannerRef}
+      flashMode={RNCamera.Constants.FlashMode.auto}
+    />
+  );
+});
+
+export default QrCodeScreen;

@@ -52,5 +52,19 @@
 	<string>QR kod taraması için kamera izni gerekiyor</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>QR kod taraması için mikrofon izni gerekiyor</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>QR kod taraması için fotoğraf galerisi izni gerekiyor</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>QR kod taraması için fotoğraf galerisi izni gerekiyor</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>FontAwesome.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>FontAwesome6_Brands.ttf</string>
+		<string>FontAwesome6_Regular.ttf</string>
+		<string>FontAwesome6_Solid.ttf</string>
+	</array>
 </dict>
 </plist>

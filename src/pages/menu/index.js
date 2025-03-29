@@ -1,14 +1,15 @@
 /* eslint-disable */
-import React, { Component } from 'react';
-import { withNavigation } from 'react-navigation';
-import { StyleSheet, Text, SafeAreaView, TouchableOpacity, FlatList, View,Linking } from 'react-native';
+import React, { useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, Text, SafeAreaView, TouchableOpacity, FlatList, View, Linking } from 'react-native';
 import { observer } from 'mobx-react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../../components/colors';
 import menuStructure from "./menuStructure";
-import AuthStore  from '../../stores/AuthStore';
+import AuthStore from '../../stores/AuthStore';
 import CustomerIdentityStore from '../../stores/CustomerIdentityStore';
-const Categroy = ({ navigation, category, menus }) => (
+
+const Category = ({ navigation, category, menus }) => (
     <View style={styles.categoryItem}>
         <Text style={styles.categoryTitle}>{category}</Text>
         <FlatList
@@ -21,17 +22,12 @@ const Categroy = ({ navigation, category, menus }) => (
 )
 
 const Menu = ({ navigation, title, icon, screen }) => (
-    
     <TouchableOpacity onPress={() => {
-
-
-if(screen.includes('http')){
-    Linking.openURL(screen)
-}
-else{
-    navigation.navigate(screen)
-}
-
+        if (screen.includes('http')) {
+            Linking.openURL(screen);
+        } else {
+            navigation.navigate(screen);
+        }
     }}>
         <View style={styles.menuItem}>
             <View style={styles.mennuIconContainer}>
@@ -46,38 +42,37 @@ else{
 );
 
 const renderCategory = (navigation) => ({ item }) => (
-    <Categroy navigation={navigation} {...item} />
+    <Category navigation={navigation} {...item} />
 )
 
 const renderMenuItem = (navigation) => ({ item }) => (
     <Menu navigation={navigation} {...item} />
 );
 
-@observer
-class MenuScreen extends Component {
-    componentDidMount(){   
-        if(!AuthStore.isSuccess)
-        {
-          AuthStore.userLogout();
-          this.props.navigation.navigate("LoginPage");
+const MenuScreen = observer(() => {
+    const navigation = useNavigation();
+
+    useEffect(() => {
+        if (!AuthStore.isSuccess) {
+            AuthStore.userLogout();
+            navigation.navigate("LoginPage");
         }
         CustomerIdentityStore.getInfo();
-    } 
-    render() {
-        return (
-            <SafeAreaView style={styles.container}>
-                <FlatList
-                    style={styles.categoryList}
-                    data={menuStructure}
-                    renderItem={renderCategory(this.props.navigation)}
-                    keyExtractor={item => item.id.toString()}
-                />
-            </SafeAreaView>
-        )
-    }
-}
+    }, [navigation]);
 
-export default withNavigation(MenuScreen)
+    return (
+        <SafeAreaView style={styles.container}>
+            <FlatList
+                style={styles.categoryList}
+                data={menuStructure}
+                renderItem={renderCategory(navigation)}
+                keyExtractor={item => item.id.toString()}
+            />
+        </SafeAreaView>
+    );
+});
+
+export default MenuScreen;
 
 const styles = StyleSheet.create({
     container: {

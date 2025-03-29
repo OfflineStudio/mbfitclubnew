@@ -1,176 +1,154 @@
 /* eslint-disable */
-import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, SafeAreaView, StyleSheet, ScrollView, Image,FlatList,ActivityIndicator,Alert } from 'react-native';
+import React, { useEffect } from 'react';
+import { Text, View, TouchableOpacity, SafeAreaView, StyleSheet, ScrollView, Image, FlatList, ActivityIndicator, Alert } from 'react-native';
 import { observer } from 'mobx-react';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 import colors from '../../components/colors';
 import MenuStore from '../../stores/MenuStore';
 import { images } from '../DepositMenu/financeimages';
-import AuthStore  from '../../stores/AuthStore';
+import AuthStore from '../../stores/AuthStore';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ActivitiesStore from '../../stores/ActivitiesStore';
 import MyView from '../../components/MyView';
-import translations from '../../configs/translations'
-const Menu = ({navigation, activityId,startDateText,branch,status,statusType,countReservation,numberOfReservation}) => (
-   
-   
-      <View style={styles.menuItem}>
-        <View style={styles.mennuIconContainer}>
-        <Icon name='calendar' style={styles.menuIcon} size={22} />
-        </View>
-        <View style={styles.menuTitleContainer}>
-        <Text style={styles.menuTitle}>{translations.branch}: {branch}</Text>
-          <Text style={styles.menuTitle}>{translations.date}: {startDateText}</Text>
-          <Text style={styles.menuTitle}>{translations.quota}: {numberOfReservation}/{countReservation}</Text>
-          <Text style={styles.menuTitle}>{translations.status}: {status}</Text>
-        </View>
-        
-        <MyView hide={statusType==1?false:true} style={styles.menuTitle}>
-        <TouchableOpacity onPress={() => {
+import translations from '../../configs/translations';
+
+const Menu = ({ navigation, activityId, startDateText, branch, status, statusType, countReservation, numberOfReservation }) => (
+  <View style={styles.menuItem}>
+    <View style={styles.mennuIconContainer}>
+      <Icon name='calendar' style={styles.menuIcon} size={22} />
+    </View>
+    <View style={styles.menuTitleContainer}>
+      <Text style={styles.menuTitle}>{translations.branch}: {branch}</Text>
+      <Text style={styles.menuTitle}>{translations.date}: {startDateText}</Text>
+      <Text style={styles.menuTitle}>{translations.quota}: {numberOfReservation}/{countReservation}</Text>
+      <Text style={styles.menuTitle}>{translations.status}: {status}</Text>
+    </View>
     
-    Alert.alert('', translations.cancelreservationinfo, [
-        {
-          text: translations.cancel,        
-          style: 'cancel',
-        },
-        {text: translations.sumbit, onPress: () => {
+    <MyView hide={statusType==1?false:true} style={styles.menuTitle}>
+      <TouchableOpacity onPress={() => {
+        Alert.alert('', translations.cancelreservationinfo, [
+          {
+            text: translations.cancel,        
+            style: 'cancel',
+          },
+          {text: translations.sumbit, onPress: () => {
             ActivitiesStore.setActivity(activityId);
             ActivitiesStore.cancelReservation(() => {
-                Alert.alert(
-                  translations.cancelreservationsuccess,
-                  '',
-                  [
-                    {
-                      text: 'OK', onPress: () => {
-          
-                        ActivitiesStore.getActivities();
-                      }
-                    },
-                  ],
-                  { cancelable: false },
-                );
-              },
-                (text) => {
-                  Alert.alert(
-                    '',
-                    text,
-                    [
-                      { text: 'OK' },
-                    ],
-                    { cancelable: false },
-                  );
-                })
-
-        }},
-      ]);
-     
-  }}>
-    <Text style={styles.textInput}>{translations.cancelreservation}</Text>
-  </TouchableOpacity>
-        </MyView>
-        <MyView hide={statusType==0?false:true} style={styles.menuTitle}>
-        <TouchableOpacity onPress={() => {
-    
-    Alert.alert('', translations.makereservationinfo, [
-        {
-          text: translations.cancel,        
-          style: 'cancel',
-        },
-        {text: translations.sumbit, onPress: () => {
+              Alert.alert(
+                translations.cancelreservationsuccess,
+                '',
+                [
+                  {
+                    text: 'OK', onPress: () => {
+                      ActivitiesStore.getActivities();
+                    }
+                  },
+                ],
+                { cancelable: false },
+              );
+            },
+            (text) => {
+              Alert.alert(
+                '',
+                text,
+                [
+                  { text: 'OK' },
+                ],
+                { cancelable: false },
+              );
+            })
+          }},
+        ]);
+      }}>
+        <Text style={styles.textInput}>{translations.cancelreservation}</Text>
+      </TouchableOpacity>
+    </MyView>
+    <MyView hide={statusType==0?false:true} style={styles.menuTitle}>
+      <TouchableOpacity onPress={() => {
+        Alert.alert('', translations.makereservationinfo, [
+          {
+            text: translations.cancel,        
+            style: 'cancel',
+          },
+          {text: translations.sumbit, onPress: () => {
             ActivitiesStore.setActivity(activityId);
             ActivitiesStore.makeReservation(() => {
-                Alert.alert(
-                  translations.makereservationsuccess,
-                  '',
-                  [
-                    {
-                      text: 'OK', onPress: () => {
-          
-                        ActivitiesStore.getActivities();
-                      }
-                    },
-                  ],
-                  { cancelable: false },
-                );
-              },
-                (text) => {
-                  Alert.alert(
-                    '',
-                    text,
-                    [
-                      { text: 'OK' },
-                    ],
-                    { cancelable: false },
-                  );
-                })
+              Alert.alert(
+                translations.makereservationsuccess,
+                '',
+                [
+                  {
+                    text: 'OK', onPress: () => {
+                      ActivitiesStore.getActivities();
+                    }
+                  },
+                ],
+                { cancelable: false },
+              );
+            },
+            (text) => {
+              Alert.alert(
+                '',
+                text,
+                [
+                  { text: 'OK' },
+                ],
+                { cancelable: false },
+              );
+            })
+          }},
+        ]);
+      }}>
+        <Text style={styles.textInput}>{translations.makereservation}</Text>
+      </TouchableOpacity>
+    </MyView>
+  </View>
+);
 
-        }},
-      ]);
-     
-  }}>
-    <Text style={styles.textInput}>{translations.makereservation}</Text>
-  </TouchableOpacity>
-        </MyView>
-      </View>
-    
-  );
-  const renderMenuItem = navigation => ({item}) => (
-    <Menu navigation={navigation} {...item} />
-  );
-@observer
-class ActivityDetailScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: ActivitiesStore.selectTypeText,
-    headerLayoutPreset: 'center'
-  });
-  componentDidMount(){   
-    if(!AuthStore.isSuccess)
-    {
+const renderMenuItem = navigation => ({ item }) => (
+  <Menu navigation={navigation} {...item} />
+);
+
+const ActivityDetailScreen = observer(() => {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (!AuthStore.isSuccess) {
       AuthStore.userLogout();
-      this.props.navigation.navigate("LoginPage");
+      navigation.navigate("LoginPage");
     }
     ActivitiesStore.getActivities();
-} 
-   
-      
-render() {
+  }, [navigation]);
+
   if (!ActivitiesStore.loading) {
-    const {navigation} = this.props;
     if (!ActivitiesStore.activities) {
-        return (
-          <View style={styles.bannerContainerWrapper}>
-            <View style={styles.bannerContainer}>
-              <Icon style={styles.bannerIcon} name={"info-circle"} size={22} />
-              <Text style={styles.bannerText}>
-                {translations.activitiesempty}
-              </Text>
-            </View>
+      return (
+        <View style={styles.bannerContainerWrapper}>
+          <View style={styles.bannerContainer}>
+            <Icon style={styles.bannerIcon} name={"info-circle"} size={22} />
+            <Text style={styles.bannerText}>
+              {translations.activitiesempty}
+            </Text>
           </View>
-        );
-      }
-      else {
-        return (
-            <SafeAreaView style={styles.container}>
-            <ScrollView>
-               <View style={styles.categoryList}>
-       
-                 
-                 <FlatList
-                   style={styles.menuList}
-                   data={ActivitiesStore.activities}
-                   renderItem={renderMenuItem(navigation)}
-                   keyExtractor={item => item.activityId.toString()}
-                 />
-               </View>
-               </ScrollView>
-           </SafeAreaView>
-        );
-      }
-    
-    
-    
-  }
-  else {
+        </View>
+      );
+    } else {
+      return (
+        <SafeAreaView style={styles.container}>
+          <ScrollView>
+            <View style={styles.categoryList}>
+              <FlatList
+                style={styles.menuList}
+                data={ActivitiesStore.activities}
+                renderItem={renderMenuItem(navigation)}
+                keyExtractor={item => item.activityId.toString()}
+              />
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+      );
+    }
+  } else {
     return (
       <View style={styles.indicatorView}>
         <View>
@@ -179,11 +157,9 @@ render() {
       </View>
     );
   }
+});
 
-}
-}
-
-export default withNavigation(ActivityDetailScreen);
+export default ActivityDetailScreen;
 
 const styles = StyleSheet.create({
     menuArrow: {

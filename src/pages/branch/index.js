@@ -1,63 +1,50 @@
 /* eslint-disable */
-import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, SafeAreaView, StyleSheet, ScrollView, Image,FlatList,ActivityIndicator } from 'react-native';
+import React, { useEffect } from 'react';
+import { Text, View, TouchableOpacity, SafeAreaView, StyleSheet, ScrollView, Image, FlatList, ActivityIndicator } from 'react-native';
 import { observer } from 'mobx-react';
-import { withNavigation } from 'react-navigation';
- 
-  
-import AuthStore  from '../../stores/AuthStore';
+import { useNavigation } from '@react-navigation/native';
+import AuthStore from '../../stores/AuthStore';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../../components/colors';
 import BranchStore from '../../stores/BranchStore';
+import translations from '../../configs/translations';
 
-import translations from '../../configs/translations'
-const Menu = ({navigation, id,name}) => (
-   
+const Menu = ({ navigation, id, name }) => (
   <TouchableOpacity onPress={() => {
-    BranchStore.setBranch(id,name);
-    
-      navigation.navigate("BranchDetailScreen")
-    
+    BranchStore.setBranch(id, name);
+    navigation.navigate("BranchDetailScreen");
   }}>
-        <View style={styles.menuItem}>
-            <View style={styles.mennuIconContainer}>
-                <Icon name='info-circle' style={styles.menuIcon} size={22} />
-            </View>
-            <View style={styles.menuTitleContainer}>
-                <Text style={styles.menuTitle}>{name}</Text>
-            </View>
-            <Icon name='angle-right' style={styles.menuArrow} size={16} />
-        </View>
-    </TouchableOpacity>
-  );
-  const renderMenuItem = navigation => ({item}) => (
-    <Menu navigation={navigation} {...item} />
-  );
-@observer
-class BranchScreen extends Component {
-    static navigationOptions = ({ navigation }) => ({
-        title: translations.branches,
-        headerLayoutPreset: 'center'
-      });
-  componentDidMount(){   
-    if(!AuthStore.isSuccess)
-    {
+    <View style={styles.menuItem}>
+      <View style={styles.mennuIconContainer}>
+        <Icon name='info-circle' style={styles.menuIcon} size={22} />
+      </View>
+      <View style={styles.menuTitleContainer}>
+        <Text style={styles.menuTitle}>{name}</Text>
+      </View>
+      <Icon name='angle-right' style={styles.menuArrow} size={16} />
+    </View>
+  </TouchableOpacity>
+);
+
+const renderMenuItem = navigation => ({ item }) => (
+  <Menu navigation={navigation} {...item} />
+);
+
+const BranchScreen = observer(() => {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (!AuthStore.isSuccess) {
       AuthStore.userLogout();
-      this.props.navigation.navigate("LoginPage");
+      navigation.navigate("LoginPage");
     }
     BranchStore.getBranch();
-} 
-   
-      
-render() {
+  }, [navigation]);
+
   if (!BranchStore.loading) {
-    const {navigation} = this.props;
     return (
       <SafeAreaView style={styles.container}>
-   
         <View style={styles.categoryList}>
-
-          
           <FlatList
             style={styles.menuList}
             data={BranchStore.branches}
@@ -65,14 +52,9 @@ render() {
             keyExtractor={item => item.id.toString()}
           />
         </View>
-      
-    </SafeAreaView>
-    
+      </SafeAreaView>
     );
-    
-    
-  }
-  else {
+  } else {
     return (
       <View style={styles.indicatorView}>
         <View>
@@ -81,12 +63,9 @@ render() {
       </View>
     );
   }
+});
 
-}
-}
-
-export default withNavigation(BranchScreen);
-
+export default BranchScreen;
 
 const styles = StyleSheet.create({
     avoidingView: {

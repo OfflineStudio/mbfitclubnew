@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import {
   Button,
   Text,
@@ -14,11 +14,12 @@ import {
 } from 'react-native';
 import { observer } from 'mobx-react';
 import colors from '../../components/colors';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { TextInputMask } from 'react-native-masked-text'
 import LastEntryStore from '../../stores/LastEntryStore';
 import translations from '../../configs/translations'
+
 const Menu = ({navigation, createDate,branchText,typeText}) => (
    
   
@@ -40,37 +41,28 @@ const renderMenuItem = navigation => ({item}) => (
 <Menu navigation={navigation} {...item} />
 );
 
-@observer
-class LastEntriesScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: translations.entryrecords,
-    headerLayoutPreset: 'center'
-  });
+const LastEntriesScreen = observer(() => {
+  const navigation = useNavigation();
 
-  componentDidMount() {
+  useEffect(() => {
     LastEntryStore.getEntry();
-  }
+  }, []);
 
-
-  render() {
-    if (!LastEntryStore.loading) {
-   
-      const {navigation} = this.props;
-      if (!LastEntryStore.dataEntry) {
-        return (
-          <View style={styles.bannerContainerWrapper}>
-            <View style={styles.bannerContainer}>
-              <Icon style={styles.bannerIcon} name={"info-circle"} size={22} />
-              <Text style={styles.bannerText}>
-                {translations.entryempty}
-              </Text>
-            </View>
+  if (!LastEntryStore.loading) {
+    if (!LastEntryStore.dataEntry) {
+      return (
+        <View style={styles.bannerContainerWrapper}>
+          <View style={styles.bannerContainer}>
+            <Icon style={styles.bannerIcon} name={"info-circle"} size={22} />
+            <Text style={styles.bannerText}>
+              {translations.entryempty}
+            </Text>
           </View>
-        );
-      }
-      else {
-        return (
-          <SafeAreaView style={styles.container}>
+        </View>
+      );
+    } else {
+      return (
+        <SafeAreaView style={styles.container}>
           <ScrollView>
             <View style={styles.categoryList}>
               <Text style={styles.categoryTitle}></Text>
@@ -83,22 +75,20 @@ class LastEntriesScreen extends Component {
             </View>
           </ScrollView>
         </SafeAreaView>
-        );
-      }
-      
-    }
-    else {
-      return (
-        <View style={styles.indicatorView}>
-          <View>
-            <ActivityIndicator size="large" color="#0000ff" />
-          </View>
-        </View>
       );
     }
+  } else {
+    return (
+      <View style={styles.indicatorView}>
+        <View>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      </View>
+    );
   }
-}
-export default withNavigation(LastEntriesScreen)
+});
+
+export default LastEntriesScreen;
 
 const styles = StyleSheet.create({
   container: {

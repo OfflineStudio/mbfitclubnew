@@ -1,97 +1,82 @@
 /* eslint-disable */
-import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, SafeAreaView, StyleSheet, ScrollView, Image,FlatList,ActivityIndicator } from 'react-native';
+import React, { useEffect } from 'react';
+import { Text, View, TouchableOpacity, SafeAreaView, StyleSheet, ScrollView, Image, FlatList, ActivityIndicator } from 'react-native';
 import { observer } from 'mobx-react';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 import colors from '../../components/colors';
 import MenuStore from '../../stores/MenuStore';
 import { images } from '../DepositMenu/financeimages';
-import AuthStore  from '../../stores/AuthStore';
+import AuthStore from '../../stores/AuthStore';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ExerciseCardStore from '../../stores/ExerciseCardStore';
+import translations from '../../configs/translations';
 
-import translations from '../../configs/translations'
-const Menu = ({navigation, exerciseText,set,duration,repetition,imagePath,videoUrl}) => (
-   
+const Menu = ({ navigation, exerciseText, set, duration, repetition, imagePath, videoUrl }) => (
   <TouchableOpacity onPress={() => {
     ExerciseCardStore.setselectedImage(imagePath);
     ExerciseCardStore.setselectedVideo(videoUrl);
-      navigation.navigate("ExerciseVideoScreen")
-    
+    navigation.navigate("ExerciseVideoScreen");
   }}>
-      <View style={styles.menuItem}>
-        <View style={styles.mennuIconContainer}>
+    <View style={styles.menuItem}>
+      <View style={styles.mennuIconContainer}>
         <Icon name='heartbeat' style={styles.menuArrow} size={22} />
-        </View>
-        <View style={styles.menuTitleContainer}>
-        <Text style={styles.menuTitle}>Hareket: {exerciseText}</Text>
-          <Text style={styles.menuTitle}>Süre: {duration}</Text>
-         
-        </View>
-        <View style={styles.menuTitleContainer}>
-      
-          <Text style={styles.menuTitle}>Set: {set}</Text>
-          <Text style={styles.menuTitle}>Tekrar: {repetition}</Text>
-        </View>
-        <Icon name='angle-right' style={styles.menuArrow} size={16} />
       </View>
-    </TouchableOpacity>
-  );
-  const renderMenuItem = navigation => ({item}) => (
-    <Menu navigation={navigation} {...item} />
-  );
-@observer
-class ExerciseCardDetailScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: translations.exercisedetail,
-    headerLayoutPreset: 'center'
-  });
-  componentDidMount(){   
-    if(!AuthStore.isSuccess)
-    {
+      <View style={styles.menuTitleContainer}>
+        <Text style={styles.menuTitle}>Hareket: {exerciseText}</Text>
+        <Text style={styles.menuTitle}>Süre: {duration}</Text>
+      </View>
+      <View style={styles.menuTitleContainer}>
+        <Text style={styles.menuTitle}>Set: {set}</Text>
+        <Text style={styles.menuTitle}>Tekrar: {repetition}</Text>
+      </View>
+      <Icon name='angle-right' style={styles.menuArrow} size={16} />
+    </View>
+  </TouchableOpacity>
+);
+
+const renderMenuItem = navigation => ({ item }) => (
+  <Menu navigation={navigation} {...item} />
+);
+
+const ExerciseCardDetailScreen = observer(() => {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (!AuthStore.isSuccess) {
       AuthStore.userLogout();
-      this.props.navigation.navigate("LoginPage");
+      navigation.navigate("LoginPage");
     }
-} 
-   
-      
-render() {
+  }, [navigation]);
+
   if (!ExerciseCardStore.loading) {
-    const {navigation} = this.props;
     if (!ExerciseCardStore.dayList.length) {
-        return (
-          <View style={styles.bannerContainerWrapper}>
-            <View style={styles.bannerContainer}>
-              <Icon style={styles.bannerIcon} name={"info-circle"} size={22} />
-              <Text style={styles.bannerText}>
-                {translations.exerciseempty}
-              </Text>
-            </View>
+      return (
+        <View style={styles.bannerContainerWrapper}>
+          <View style={styles.bannerContainer}>
+            <Icon style={styles.bannerIcon} name={"info-circle"} size={22} />
+            <Text style={styles.bannerText}>
+              {translations.exerciseempty}
+            </Text>
           </View>
-        );
-      }
-      else {
-        return (
-            <SafeAreaView style={styles.container}>
-            <ScrollView>
-               <View style={styles.categoryList}>
-       
-                 
-               <FlatList
-            style={styles.menuList}
-            data={ExerciseCardStore.dayList}
-            renderItem={renderMenuItem(navigation)}
-            keyExtractor={item => item.id.toString()}
-          />
-               </View>
-               </ScrollView>
-           </SafeAreaView>
-        );
-      }
-    
-    
-  }
-  else {
+        </View>
+      );
+    } else {
+      return (
+        <SafeAreaView style={styles.container}>
+          <ScrollView>
+            <View style={styles.categoryList}>
+              <FlatList
+                style={styles.menuList}
+                data={ExerciseCardStore.dayList}
+                renderItem={renderMenuItem(navigation)}
+                keyExtractor={item => item.id.toString()}
+              />
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+      );
+    }
+  } else {
     return (
       <View style={styles.indicatorView}>
         <View>
@@ -100,11 +85,9 @@ render() {
       </View>
     );
   }
+});
 
-}
-}
-
-export default withNavigation(ExerciseCardDetailScreen);
+export default ExerciseCardDetailScreen;
 
 const styles = StyleSheet.create({
     menuArrow: {

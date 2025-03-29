@@ -6,9 +6,9 @@ import QrCodeScreen from '../pages/qr';
 import ExerciseCardScreen from '../pages/exercisecard';
 import MenuScreen from '../pages/menu';
 import translations from '../configs/translations';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import NewsStore from '../stores/NewsStore';
-import ActivitiesStore  from '../stores/ActivitiesStore';
+import ActivitiesStore from '../stores/ActivitiesStore';
 
 const Tab = createBottomTabNavigator();
 
@@ -28,13 +28,12 @@ function TabNavigator() {
         options={{
           tabBarLabel: translations.news,
           tabBarIcon: ({ color, size }) => (
-            <Icon name="newspaper-outline" size={size} color={color} />
+            <Icon name="newspaper-o" size={size} color={color} />
           ),
         }}
         listeners={{
           tabPress: () => {
             NewsStore.getNews();
-           
           },
         }}
       />
@@ -44,12 +43,12 @@ function TabNavigator() {
         options={{
           tabBarLabel: translations.activities,
           tabBarIcon: ({ color, size }) => (
-            <Icon name="bicycle-outline" size={size} color={color} />
+            <Icon name="bicycle" size={size} color={color} />
           ),
         }}
         listeners={{
           tabPress: () => {
-          	ActivitiesStore.getTypes();
+            ActivitiesStore.getTypes();
           },
         }}
       />
@@ -59,12 +58,12 @@ function TabNavigator() {
         options={{
           tabBarLabel: translations.qrcode,
           tabBarIcon: ({ color, size }) => (
-            <Icon name="qr-code-outline" size={size} color={color} />
+            <Icon name="qrcode" size={size} color={color} />
           ),
         }}
         listeners={{
           tabPress: () => {
-            QrStore.setTimer(false);
+          
           },
         }}
       />
@@ -74,12 +73,11 @@ function TabNavigator() {
         options={{
           tabBarLabel: translations.exercisecard,
           tabBarIcon: ({ color, size }) => (
-            <Icon name="heart-pulse-outline" size={size} color={color} />
+            <Icon name="heartbeat" size={size} color={color} />
           ),
         }}
         listeners={{
           tabPress: () => {
-         
           },
         }}
       />
@@ -89,12 +87,11 @@ function TabNavigator() {
         options={{
           tabBarLabel: translations.menu,
           tabBarIcon: ({ color, size }) => (
-            <Icon name="menu-outline" size={size} color={color} />
+            <Icon name="bars" size={size} color={color} />
           ),
         }}
         listeners={{
           tabPress: () => {
-         
           },
         }}
       />

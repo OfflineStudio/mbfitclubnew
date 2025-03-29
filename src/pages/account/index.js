@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, {Component} from 'react';
+import React, { useEffect } from 'react';
 import {
   Text,
   View,
@@ -9,50 +9,44 @@ import {
   ScrollView,
   Image,
   FlatList,
-  Alert,ActivityIndicator
+  Alert,
+  ActivityIndicator
 } from 'react-native';
-import {observer} from 'mobx-react';
-import {withNavigation} from 'react-navigation';
+import { observer } from 'mobx-react';
+import { useNavigation } from '@react-navigation/native';
 import colors from '../../components/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
- 
-
 import { screens } from '../DepositMenu/financeScreens';
- 
-import AuthStore  from '../../stores/AuthStore';
+import AuthStore from '../../stores/AuthStore';
 import { Right } from 'native-base';
 import LoginStore from '../../stores/LoginStore';
 import AccountStore from '../../stores/AccountStore';
-import translations from '../../configs/translations'
+import translations from '../../configs/translations';
 
+const AccountsScreen = observer(() => {
+  const navigation = useNavigation();
 
-@observer
-class AccountsScreen extends Component {
-  componentDidMount(){   
-    if(!AuthStore.isSuccess)
-    {
+  useEffect(() => {
+    if (!AuthStore.isSuccess) {
       AuthStore.userLogout();
-      this.props.navigation.navigate("LoginPage");
+      navigation.navigate("LoginPage");
     }
-   
-      
-}
+  }, [navigation]);
 
-render() {
   return (
     <View style={styles.bannerContainerWrapper}>
       <View style={styles.bannerContainer}>
         <Icon style={styles.bannerIcon} name={"info-circle"} size={22} />
         <Text style={styles.bannerText}>
-        {translations.aboutus}
+          {translations.aboutus}
         </Text>
       </View>
     </View>
   );
-}
-}
+});
 
-export default withNavigation(AccountsScreen);
+export default AccountsScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

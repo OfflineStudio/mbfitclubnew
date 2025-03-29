@@ -1,33 +1,26 @@
 /* eslint-disable */
-import React, { Component } from 'react';
-import {Text, View, FlatList ,ActivityIndicator,TouchableOpacity} from 'react-native';
- 
+import React, { useEffect } from 'react';
+import { Text, View, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
- 
-import { withNavigation } from 'react-navigation';
- class LogoutScreen extends Component {
-     
+import { useNavigation } from '@react-navigation/native';
 
-    
-  componentDidMount(){
-    try {
-          AsyncStorage.removeItem('CoreMobile');
-        this.props.navigation.navigate("LoginPage");
-    } catch (err) {
-        this.props.navigation.navigate("HomePage");
-    }
-}   
+const LogoutScreen = () => {
+  const navigation = useNavigation();
 
-      
-  render() {
-     
-   
-      return ( 
-       
-         <View></View>
-        );
-    }
-     
+  useEffect(() => {
+    const handleLogout = async () => {
+      try {
+        await AsyncStorage.removeItem('CoreMobile');
+        navigation.navigate("LoginPage");
+      } catch (err) {
+        navigation.navigate("HomePage");
+      }
+    };
 
-}
-export default withNavigation(LogoutScreen)
+    handleLogout();
+  }, [navigation]);
+
+  return <View />;
+};
+
+export default LogoutScreen;

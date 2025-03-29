@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { Component } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import {
   Button,
   Text,
@@ -15,21 +15,18 @@ import {
 } from 'react-native';
 import { observer } from 'mobx-react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { withNavigation } from 'react-navigation';
+import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from "react-native-image-picker"
 import { TextInputMask } from 'react-native-masked-text'
 import CustomerIdentityStore from '../../stores/CustomerIdentityStore';
 import translations from '../../configs/translations'
 import DatePicker from 'react-native-date-picker'
 const { width, height } = Dimensions.get('window');
-@observer
-class CustomerIdentityScreen extends Component {
-  
-  static navigationOptions = ({ navigation }) => ({
-    title: 'Kişisel Bilgileriniz',
-    headerLayoutPreset: 'center'
-  });
-  handleOpenFileClick = () => {
+
+const CustomerIdentityScreen = observer(() => {
+  const navigation = useNavigation();
+
+  const handleOpenFileClick = useCallback(() => {
     const options = {
       title: translations.selectphoto,
       includeBase64:true,
@@ -52,19 +49,16 @@ class CustomerIdentityScreen extends Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        const source = { uri: response.uri };
-     
         CustomerIdentityStore.setdata(response.assets[0]);
-       
       }
     });
-  }
+  }, []);
 
-  componentDidMount() {
+  useEffect(() => {
     CustomerIdentityStore.getInfo();
-  }
+  }, []);
 
-  handleSubmitClick = () => {
+  const handleSubmitClick = useCallback(() => {
     CustomerIdentityStore.setInfo(() => {
       Alert.alert(
         'Bilgileriniz Kaydedilmiştir.',
@@ -72,7 +66,7 @@ class CustomerIdentityScreen extends Component {
         [
           {
             text: 'OK', onPress: () => {  CustomerIdentityStore.getInfo();
-              this.props.navigation.navigate("CustomerIdentityScreen");}
+              navigation.navigate("CustomerIdentityScreen");}
           },
         ],
         { cancelable: false },
@@ -88,9 +82,9 @@ class CustomerIdentityScreen extends Component {
           { cancelable: false },
         );
       })
-  }
+  }, [navigation]);
 
-  render() {
+  if (!CustomerIdentityStore.loading) {
     let img;
   
     if (CustomerIdentityStore.PhotoUrl=="") {
@@ -101,80 +95,78 @@ class CustomerIdentityScreen extends Component {
       let source = { uri: CustomerIdentityStore.PhotoUrl };
       img = <Image source={source} style={docStyle.img} />
     }
-    if (!CustomerIdentityStore.loading) {
-   
 
-      return (
-        <KeyboardAvoidingView style={{ flex: 1, width: null, height: null, resizeMode: 'cover' }} >
-          <ScrollView style={styles.scrollView}>
-            <View>
-              <View style={styles.topBannerContainer}>
-                <Icon style={styles.topBannerIcon} name={"info-circle"} size={22} />
-                <Text style={styles.topBannerText}>
-                  Sizlere daha iyi hizmet verebilmek için bazı bilgilerinize ihtiyaç duyuyoruz.
-                </Text>
-              </View>
-               <View style={styles.inputView}>
-                <Text style={styles.inputLabel}>{translations.profilphoto}</Text>
-                {img}
-                {/* <Button
-                title={translations.selectprofilphoto}
-                onPress={this.handleOpenFileClick}
-              /> */}
-              </View> 
-            
-              {/* <View style={styles.inputView}>
-                <Text style={styles.inputLabel}>{translations.phonenumber}</Text>
-                <TextInput
-              style={styles.textInput}
-              placeholderTextColor={'gray'}
-              placeholder={translations.phonenumber}
-              value={CustomerIdentityStore.PhoneNumber}
-              onChangeText={text => { CustomerIdentityStore.setPhoneNumber(text) }}           
-              keyboardType="phone-pad"
-             
-            />
-              </View> */}
-                <View style={styles.inputView}>
-                <Text style={styles.inputLabel}>{translations.birthdate}  </Text>
-                {/* <DatePicker date={new Date()} onDateChange={CustomerIdentityStore.setBirthdate} mode="date" /> */}
-                <Button title={translations.selectBirthDate} onPress={() => CustomerIdentityStore.setBirthDateModal(true)} />
+    return (
+      <KeyboardAvoidingView style={{ flex: 1, width: null, height: null, resizeMode: 'cover' }} >
+        <ScrollView style={styles.scrollView}>
+          <View>
+            <View style={styles.topBannerContainer}>
+              <Icon style={styles.topBannerIcon} name={"info-circle"} size={22} />
+              <Text style={styles.topBannerText}>
+                Sizlere daha iyi hizmet verebilmek için bazı bilgilerinize ihtiyaç duyuyoruz.
+              </Text>
+            </View>
+             <View style={styles.inputView}>
+              <Text style={styles.inputLabel}>{translations.profilphoto}</Text>
+              {img}
+              {/* <Button
+              title={translations.selectprofilphoto}
+              onPress={this.handleOpenFileClick}
+            /> */}
+            </View> 
+          
+            {/* <View style={styles.inputView}>
+              <Text style={styles.inputLabel}>{translations.phonenumber}</Text>
+              <TextInput
+            style={styles.textInput}
+            placeholderTextColor={'gray'}
+            placeholder={translations.phonenumber}
+            value={CustomerIdentityStore.PhoneNumber}
+            onChangeText={text => { CustomerIdentityStore.setPhoneNumber(text) }}           
+            keyboardType="phone-pad"
+           
+          />
+            </View> */}
+              <View style={styles.inputView}>
+              <Text style={styles.inputLabel}>{translations.birthdate}  </Text>
+              {/* <DatePicker date={new Date()} onDateChange={CustomerIdentityStore.setBirthdate} mode="date" /> */}
+              <Button title={translations.selectBirthDate} onPress={() => CustomerIdentityStore.setBirthDateModal(true)} />
       <DatePicker modal open={ CustomerIdentityStore.BirthDateModal} date={new Date(CustomerIdentityStore.BirthDate)} mode="date" confirmText={translations.sumbit} cancelText={translations.cancel} 
         onConfirm={(date) => {
           CustomerIdentityStore.setBirthdate(date)
           CustomerIdentityStore.setBirthDateModal(false)
-          this.handleSubmitClick()
+          handleSubmitClick()
         }}
         onCancel={() => {
           CustomerIdentityStore.setBirthDateModal(false)
         }}
       />
-                
-              </View>
-               
-              {/* <View style={styles.inputView}>
-                <Button
-                  title="Kaydet"
-                  disabled={!CustomerIdentityStore.isValid}
-                  onPress={this.handleSubmitClick}
-                />
-              </View> */}
+              
             </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      );
-    }
-    else {
-      return (
-        <View style={styles.indicatorView}>
-          <View>
-            <ActivityIndicator size="large" color="#0000ff" />
+             
+            {/* <View style={styles.inputView}>
+              <Button
+                title="Kaydet"
+                disabled={!CustomerIdentityStore.isValid}
+                onPress={this.handleSubmitClick}
+              />
+            </View> */}
           </View>
-        </View>
-      );
-    }
+        </ScrollView>
+      </KeyboardAvoidingView>
+    );
   }
-}
+  else {
+    return (
+      <View style={styles.indicatorView}>
+        <View>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      </View>
+    );
+  }
+});
+
 const docStyle = {
   img: {
     width: width * 0.45,
@@ -182,7 +174,8 @@ const docStyle = {
     margin: 20
   }
 }
-export default withNavigation(CustomerIdentityScreen)
+
+export default CustomerIdentityScreen;
 
 const styles = StyleSheet.create({
   indicatorView: {
