@@ -66,11 +66,19 @@ const MenuScreen = observer(() => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    if (!AuthStore.isSuccess) {
-      AuthStore.userLogout();
-      navigation.navigate("LoginPage");
-    }
-    CustomerIdentityStore.getInfo();
+    const checkAuth = async () => {
+      if (!AuthStore.isSuccess) {
+        await AuthStore.userLogout();
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Login' }],
+        });
+        return;
+      }
+      CustomerIdentityStore.getInfo();
+    };
+
+    checkAuth();
   }, [navigation]);
 
   return (

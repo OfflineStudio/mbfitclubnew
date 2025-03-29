@@ -4,6 +4,7 @@ import TabNavigator from './TabNavigator';
 import ExerciseCardDetail from '../pages/exercisecard/detail';
 import ExerciseVideoScreen from '../pages/exercisecard/video';
 import LoginScreen from '../pages/login';
+import LogoutScreen from '../pages/login/logout';
 import ForgotPassword from '../pages/forgotpassword';
 import AboutUsScreen from '../pages/aboutus';
 import ContactScreen from '../pages/contact';
@@ -29,6 +30,7 @@ function StackNavigator() {
       }}
     >
       <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="LogoutScreen" component={LogoutScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="MainTabs" component={TabNavigator} />
       <Stack.Screen 

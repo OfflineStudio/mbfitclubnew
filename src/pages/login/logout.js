@@ -1,26 +1,38 @@
 /* eslint-disable */
 import React, { useEffect } from 'react';
-import { Text, View, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, ActivityIndicator } from 'react-native';
+import { observer } from 'mobx-react';
 import { useNavigation } from '@react-navigation/native';
+import AuthStore from '../../stores/AuthStore';
 
-const LogoutScreen = () => {
+const LogoutScreen = observer(() => {
   const navigation = useNavigation();
 
   useEffect(() => {
     const handleLogout = async () => {
       try {
-        await AsyncStorage.removeItem('CoreMobile');
-        navigation.navigate("LoginPage");
+        await AuthStore.userLogout();
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Login' }],
+        });
       } catch (err) {
-        navigation.navigate("HomePage");
+        console.error('Logout error:', err);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Login' }],
+        });
       }
     };
 
     handleLogout();
   }, [navigation]);
 
-  return <View />;
-};
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color="#7fcac6" />
+    </View>
+  );
+});
 
 export default LogoutScreen;
