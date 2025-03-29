@@ -1,21 +1,26 @@
 import React from 'react';
 import { createContext, useContext } from 'react';
-import rootStore from './RootStore';
+import { makeAutoObservable } from 'mobx';
 
-export const StoreContext = createContext(null);
+class RootStore {
+  constructor() {
+    this.userData = null;
+    makeAutoObservable(this);
+  }
 
-export function StoreProvider({ children }) {
+  setUserData(data) {
+    this.userData = data;
+  }
+}
+
+const rootStore = new RootStore();
+export const StoreContext = createContext(rootStore);
+export const useStore = () => useContext(StoreContext);
+
+export const StoreProvider = ({ children }) => {
   return (
     <StoreContext.Provider value={rootStore}>
       {children}
     </StoreContext.Provider>
   );
-}
-
-export function useStore() {
-  const store = useContext(StoreContext);
-  if (!store) {
-    throw new Error('useStore hook\'u bir StoreProvider içinde kullanılmalıdır!');
-  }
-  return store;
-} 
+}; 
