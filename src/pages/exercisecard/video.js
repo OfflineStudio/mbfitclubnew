@@ -1,35 +1,92 @@
 /* eslint-disable */
-import React from 'react';
+import React, { useState } from 'react';
+import { 
+  StyleSheet, 
+  View, 
+  SafeAreaView, 
+  Platform,
+  StatusBar,
+  ActivityIndicator,
+  Dimensions
+} from 'react-native';
 import { observer } from 'mobx-react';
-import { StyleSheet, Text, SafeAreaView, TouchableOpacity, View, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import VideoPlayer from 'react-native-video-player';
+import Video from 'react-native-video';
 import ExerciseCardStore from '../../stores/ExerciseCardStore';
-import translations from '../../configs/translations';
+import colors from '../../components/colors';
+
+const { width, height } = Dimensions.get('window');
 
 const ExerciseVideoScreen = observer(() => {
-  const navigation = useNavigation();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  const handleLoadStart = () => {
+    setLoading(true);
+    setError(false);
+  };
+
+  const handleLoad = () => {
+    setLoading(false);
+  };
+
+  const handleError = () => {
+    setLoading(false);
+    setError(true);
+  };
 
   return (
-    <View style={styles.centered}>
-      <VideoPlayer
-        video={{ uri: ExerciseCardStore.selectedVideo }}
-        videoWidth={1600}
-        videoHeight={900}
-        thumbnail={{ uri: ExerciseCardStore.selectedImage }}
-        controls={true}
-        disableFullscreen={true}
-        resizeMode={'cover'}
+    <SafeAreaView style={styles.container}>
+      <StatusBar
+        barStyle={Platform.OS === 'ios' ? 'light-content' : 'light-content'}
+        backgroundColor={colors.background || '#000'}
       />
-    </View>
+      
+      <View style={styles.videoContainer}>
+        <Video
+          source={{ uri: ExerciseCardStore.selectedVideo }}
+          style={styles.video}
+          poster={ExerciseCardStore.selectedImage}
+          posterResizeMode="cover"
+          resizeMode="contain"
+          repeat
+          controls
+          onLoadStart={handleLoadStart}
+          onLoad={handleLoad}
+          onError={handleError}
+        />
+        
+        {loading && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={colors.primary || '#007AFF'} />
+          </View>
+        )}
+      </View>
+    </SafeAreaView>
   );
 });
 
 export default ExerciseVideoScreen;
 
 const styles = StyleSheet.create({
-  centered: {
+  container: {
     flex: 1,
-    justifyContent: "center",
+    backgroundColor: '#000'
+  },
+  videoContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000'
+  },
+  video: {
+    width: width,
+    height: width * 0.5625, // 16:9 aspect ratio
+    backgroundColor: '#000'
+  },
+  loadingContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)'
   }
 });
