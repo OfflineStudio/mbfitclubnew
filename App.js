@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StoreProvider } from './src/stores/StoreProvider.js';
 import LoginScreen from './src/pages/login';
 import TabNavigator from './src/navigation/TabNavigator';
+import ForgotPassword from './src/pages/forgotpassword';
 import { colors } from './src/theme/colors';
 
 const Stack = createNativeStackNavigator();
@@ -26,6 +27,7 @@ function App() {
           >
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Tabs" component={TabNavigator} />
+            <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
           </Stack.Navigator>
         </SafeAreaView>
       </StoreProvider>

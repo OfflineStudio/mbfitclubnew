@@ -88,9 +88,19 @@ const styles = StyleSheet.create({
   },
   remindView: {
     backgroundColor: '#ffffff',
-    borderRadius: 4,
-    margin: 14,
-    padding: 14
+    borderRadius: 16,
+    width: '90%',
+    padding: 24,
+    marginHorizontal: '5%',
+    marginTop: '50%',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   titleView: {
     alignItems: "center",
