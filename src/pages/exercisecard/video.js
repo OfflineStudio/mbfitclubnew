@@ -1,24 +1,40 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   StyleSheet, 
   View, 
-  SafeAreaView, 
-  Platform,
+  SafeAreaView,
   StatusBar,
   ActivityIndicator,
-  Dimensions
+  Dimensions,
+  Platform
 } from 'react-native';
 import { observer } from 'mobx-react';
 import Video from 'react-native-video';
 import ExerciseCardStore from '../../stores/ExerciseCardStore';
 import colors from '../../components/colors';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
+import Orientation from 'react-native-orientation-locker';
 
 const { width, height } = Dimensions.get('window');
 
 const ExerciseVideoScreen = observer(() => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      // Video sayfası açıldığında tüm yönlere dönmeyi etkinleştir
+      Orientation.unlockAllOrientations();
+    }
+    return () => {
+      // Sayfadan çıkıldığında dikey moda geri dön
+      Orientation.lockToPortrait();
+    };
+  }, [isFocused]);
 
   const handleLoadStart = () => {
     setLoading(true);
@@ -34,25 +50,41 @@ const ExerciseVideoScreen = observer(() => {
     setError(true);
   };
 
+  const handleFullscreenChange = (isFullscreen) => {
+    setIsFullscreen(isFullscreen);
+    if (isFullscreen) {
+      StatusBar.setHidden(true);
+    } else {
+      StatusBar.setHidden(false);
+    }
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, isFullscreen && styles.fullscreenContainer]}>
       <StatusBar
-        barStyle={Platform.OS === 'ios' ? 'light-content' : 'light-content'}
-        backgroundColor={colors.background || '#000'}
+        barStyle="light-content"
+        backgroundColor="#000"
+        hidden={isFullscreen}
       />
       
-      <View style={styles.videoContainer}>
+      <View style={[styles.videoContainer, isFullscreen && styles.fullscreenVideo]}>
         <Video
           source={{ uri: ExerciseCardStore.selectedVideo }}
-          style={styles.video}
+          style={isFullscreen ? styles.fullscreenVideo : styles.video}
           poster={ExerciseCardStore.selectedImage}
           posterResizeMode="cover"
           resizeMode="contain"
           repeat
           controls
+          fullscreen={isFullscreen}
+          onFullscreenPlayerWillPresent={() => handleFullscreenChange(true)}
+          onFullscreenPlayerWillDismiss={() => handleFullscreenChange(false)}
           onLoadStart={handleLoadStart}
           onLoad={handleLoad}
           onError={handleError}
+          ignoreSilentSwitch="ignore"
+          fullscreenAutorotate={true}
+          fullscreenOrientation="landscape"
         />
         
         {loading && (
@@ -72,6 +104,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000'
   },
+  fullscreenContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#000'
+  },
   videoContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -81,6 +121,11 @@ const styles = StyleSheet.create({
   video: {
     width: width,
     height: width * 0.5625, // 16:9 aspect ratio
+    backgroundColor: '#000'
+  },
+  fullscreenVideo: {
+    width: height, // Tam ekranda genişlik ve yüksekliği değiştir
+    height: width,
     backgroundColor: '#000'
   },
   loadingContainer: {

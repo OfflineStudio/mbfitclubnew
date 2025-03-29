@@ -10,7 +10,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		8953184A4636AB29838FFD06 /* libPods-mbfitclub.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 716CDDB44FE3B7B60D2B8FDF /* libPods-mbfitclub.a */; };
+		BC73318380BF49AF591FD771 /* libPods-mbfitclub.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FCF9642E1DE48176F3D49FA0 /* libPods-mbfitclub.a */; };
 		F9D85DAE209EBA967315A4A7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
@@ -19,12 +19,12 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = mbfitclub/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = mbfitclub/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = mbfitclub/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		1F9523175423C5194D709143 /* Pods-mbfitclub.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mbfitclub.release.xcconfig"; path = "Target Support Files/Pods-mbfitclub/Pods-mbfitclub.release.xcconfig"; sourceTree = "<group>"; };
-		716CDDB44FE3B7B60D2B8FDF /* libPods-mbfitclub.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-mbfitclub.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		407CE605ED7B49F3935C79AD /* Pods-mbfitclub.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mbfitclub.debug.xcconfig"; path = "Target Support Files/Pods-mbfitclub/Pods-mbfitclub.debug.xcconfig"; sourceTree = "<group>"; };
+		57DC08FFA51BDAB5036A9493 /* Pods-mbfitclub.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mbfitclub.release.xcconfig"; path = "Target Support Files/Pods-mbfitclub/Pods-mbfitclub.release.xcconfig"; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = mbfitclub/AppDelegate.swift; sourceTree = "<group>"; };
-		79535B1398D7EC846969B9A9 /* Pods-mbfitclub.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mbfitclub.debug.xcconfig"; path = "Target Support Files/Pods-mbfitclub/Pods-mbfitclub.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = mbfitclub/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		FCF9642E1DE48176F3D49FA0 /* libPods-mbfitclub.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-mbfitclub.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,7 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8953184A4636AB29838FFD06 /* libPods-mbfitclub.a in Frameworks */,
+				BC73318380BF49AF591FD771 /* libPods-mbfitclub.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,7 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				716CDDB44FE3B7B60D2B8FDF /* libPods-mbfitclub.a */,
+				FCF9642E1DE48176F3D49FA0 /* libPods-mbfitclub.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -92,8 +92,8 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				79535B1398D7EC846969B9A9 /* Pods-mbfitclub.debug.xcconfig */,
-				1F9523175423C5194D709143 /* Pods-mbfitclub.release.xcconfig */,
+				407CE605ED7B49F3935C79AD /* Pods-mbfitclub.debug.xcconfig */,
+				57DC08FFA51BDAB5036A9493 /* Pods-mbfitclub.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -105,13 +105,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "mbfitclub" */;
 			buildPhases = (
-				DCECFD4A51356858A9D9FB3B /* [CP] Check Pods Manifest.lock */,
+				FA3572178121504440763BD9 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				C7C8D682E9116810255D13BE /* [CP] Embed Pods Frameworks */,
-				DB41A7C58BB0A3280B31DCFA /* [CP] Copy Pods Resources */,
+				309619E85AF703AF54D1E8DA /* [CP] Embed Pods Frameworks */,
+				6FB8D18E34856D9A9A80BBD7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -183,7 +183,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		C7C8D682E9116810255D13BE /* [CP] Embed Pods Frameworks */ = {
+		309619E85AF703AF54D1E8DA /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -200,7 +200,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-mbfitclub/Pods-mbfitclub-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DB41A7C58BB0A3280B31DCFA /* [CP] Copy Pods Resources */ = {
+		6FB8D18E34856D9A9A80BBD7 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -217,7 +217,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-mbfitclub/Pods-mbfitclub-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DCECFD4A51356858A9D9FB3B /* [CP] Check Pods Manifest.lock */ = {
+		FA3572178121504440763BD9 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -255,14 +255,14 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 79535B1398D7EC846969B9A9 /* Pods-mbfitclub.debug.xcconfig */;
+			baseConfigurationReference = 407CE605ED7B49F3935C79AD /* Pods-mbfitclub.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = mbfitclub/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -283,13 +283,13 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1F9523175423C5194D709143 /* Pods-mbfitclub.release.xcconfig */;
+			baseConfigurationReference = 57DC08FFA51BDAB5036A9493 /* Pods-mbfitclub.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = mbfitclub/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -376,10 +376,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -448,10 +445,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -9,12 +9,18 @@ import ForgotPassword from './src/pages/forgotpassword';
 import { colors } from './src/theme/colors';
 import { enableScreens } from 'react-native-screens';
 import 'react-native-gesture-handler';
+import Orientation from 'react-native-orientation-locker';
 
 enableScreens();
 
 const Stack = createNativeStackNavigator();
 
-function App() {
+const App = () => {
+  useEffect(() => {
+    // Uygulama başladığında dikey moda kilitle
+    Orientation.lockToPortrait();
+  }, []);
+
   return (
     <NavigationContainer>
       <StoreProvider>
@@ -28,7 +34,7 @@ function App() {
       </StoreProvider>
     </NavigationContainer>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
