@@ -11,6 +11,7 @@ import { enableScreens } from 'react-native-screens';
 import 'react-native-gesture-handler';
 import Orientation from 'react-native-orientation-locker';
 import NotificationService from './src/services/NotificationService';
+import { navigationRef } from './src/services/NavigationService';
 
 enableScreens();
 
@@ -40,7 +41,7 @@ const App = () => {
   };
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <StoreProvider>
         <SafeAreaView style={styles.container}>
           <StatusBar
