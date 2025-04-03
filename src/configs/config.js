@@ -1,5 +1,5 @@
 
-export const APIBase = params => 'https://fitmobileapi.kumteknoloji.com/'+ params
+export const APIBase = params => 'https://mobileapi.mbfitclub.com.tr/'+ params
 export const MobileVersion='1.1'
 export const CurrentCompany='1000'
 
