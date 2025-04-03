@@ -1,6 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
+apply plugin: 'com.google.gms.google-services'
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -77,14 +78,22 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.mbfitclub"
+    namespace "com.mbfitclubtr"
     defaultConfig {
-        applicationId "com.mbfitclub"
-        minSdkVersion rootProject.ext.minSdkVersion
+        applicationId "com.mbfitclubtr"
+        minSdkVersion 24
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
+
+    // Vector icons configuration
+    sourceSets {
+        main {
+            assets.srcDirs += ['../node_modules/react-native-vector-icons/Fonts']
+        }
+    }
+
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
@@ -116,4 +125,10 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "com.facebook.react:react-native:+"
+    implementation platform('com.google.firebase:firebase-bom:32.7.4')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-messaging'
 }

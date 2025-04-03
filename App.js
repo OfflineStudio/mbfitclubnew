@@ -10,6 +10,7 @@ import { colors } from './src/theme/colors';
 import { enableScreens } from 'react-native-screens';
 import 'react-native-gesture-handler';
 import Orientation from 'react-native-orientation-locker';
+import NotificationService from './src/services/NotificationService';
 
 enableScreens();
 
@@ -19,7 +20,24 @@ const App = () => {
   useEffect(() => {
     // Uygulama başladığında dikey moda kilitle
     Orientation.lockToPortrait();
+    initNotifications();
   }, []);
+
+  const initNotifications = async () => {
+    try {
+      // FCM token'ı al ve LoginStore'a kaydet
+      const token = await NotificationService.getFCMToken();
+      
+      if (token) {
+        console.log('FCM Token:', token);
+      }
+
+      // Bildirimleri dinlemeye başla
+      NotificationService.onMessageReceived();
+    } catch (error) {
+      console.log('Notification initialization error:', error);
+    }
+  };
 
   return (
     <NavigationContainer>

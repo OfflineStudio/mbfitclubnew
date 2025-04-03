@@ -1,4 +1,4 @@
-package com.mbfitclub
+package com.mbfitclubtr
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

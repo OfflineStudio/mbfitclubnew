@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "792592423934",
+    "project_id": "mbfitclub-ac536",
+    "storage_bucket": "mbfitclub-ac536.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:792592423934:android:87d8ff6f4489d6ebce7eaf",
+        "android_client_info": {
+          "package_name": "com.mbfitclubtr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALCqvQdQUgkOk_CgkEFIF8ELMmq-W9rng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
